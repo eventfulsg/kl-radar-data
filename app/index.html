@@ -27,6 +27,12 @@
   button.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:10px 22px}
   button.ghost{background:transparent}
   .toggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .tabs button{font-size:13px;padding:7px 13px}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .gtrends{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .gchip{font-size:12.5px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);text-decoration:none}
+  .gchip span{color:var(--muted);font-weight:500}
   .statusline{font-size:13px;color:var(--muted);margin-top:10px}
   .hint{background:rgba(242,111,33,.1);border:1px solid rgba(242,111,33,.35);border-radius:14px;padding:10px 14px;font-size:13.5px;margin-bottom:14px;display:none}
   .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px}
@@ -68,8 +74,14 @@
   <div class="panel">
     <div class="controls">
       <button class="primary" onclick="loadFeed(true)">🔄 Refresh</button>
-      <button class="toggle" id="dealsBtn" onclick="toggleDeals()">🍔 Deals only</button>
       <button class="ghost" onclick="copyList()">📋 Copy list</button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button data-tab="all" class="on" onclick="setTab('all')">🔥 All</button>
+      <button data-tab="event" onclick="setTab('event')">🎪 Events</button>
+      <button data-tab="deal" onclick="setTab('deal')">🍔 Food deals</button>
+      <button data-tab="launch" onclick="setTab('launch')">🆕 Launches</button>
+      <button data-tab="trend" onclick="setTab('trend')">📰 Trending topics</button>
     </div>
     <div class="statusline" id="status">Loading latest scan…</div>
   </div>
@@ -96,7 +108,9 @@
   <details>
     <summary>ℹ️ How this works</summary>
     <div class="body">
-      The radar bot scans 18 KL/Malaysia pages every morning (8:00am, then again 8:45am for growth rates) — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo.
+      The radar bot scans 21 Malaysia pages every morning (8:00am, then again 8:45am for growth rates) — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo.
+      <h4>Categories</h4>
+      🎪 Events · 🍔 Food deals · 🆕 Launches are auto-detected from captions of the content pages. 📰 <b>Trending topics</b> is different: it pulls the fastest-growing posts from Malaysia's viral news pages (WeirdKaya, SAYS, World of Buzz) plus live Google Trends MY searches — raw material for reactive content and jokes, not reposts.
       <h4>Ranking</h4>
       Fresh posts (≤48h) ranked by <b>engagement velocity</b> — 📈 likes gained per hour between the two morning scans (true trending signal), or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
       <h4>Why velocity</h4>
@@ -112,7 +126,8 @@
 
 <script>
 const FEED = 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/results.json';
-let feed = null, dealsOnly = false;
+const CAT_BADGE = {deal:'🍔 DEAL', event:'🎪 EVENT', launch:'🆕 LAUNCH', trend:'📰 NEWS', other:''};
+let feed = null, tab = 'all';
 
 function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
@@ -136,18 +151,34 @@ async function loadFeed(manual){
   }
 }
 
+function currentList(){
+  if(!feed) return [];
+  if(tab==='trend') return (feed.trending||[]);
+  const posts = feed.posts||[];
+  return tab==='all' ? posts : posts.filter(p=>p.cat===tab);
+}
+
 function render(){
   const el=document.getElementById('results');
-  if(!feed || !feed.posts.length){ el.innerHTML='<div class="empty">No fresh posts in the last scan.</div>'; return; }
-  const list = feed.posts.filter(p=>!dealsOnly||p.deal).slice(0,25);
-  if(!list.length){ el.innerHTML='<div class="empty">No deal posts in this scan — flip off the Deals filter.</div>'; return; }
-  el.innerHTML = list.map((p,i)=>`
+  if(!feed){ el.innerHTML='<div class="empty">No data yet.</div>'; return; }
+  const list = currentList().slice(0,25);
+  let head='';
+  if(tab==='trend'){
+    const gt=(feed.gtrends||[]).slice(0,10);
+    if(gt.length) head='<div class="gtrends">'+gt.map(t=>
+      `<a class="gchip" href="https://www.google.com/search?q=${encodeURIComponent(t.q)}" target="_blank" rel="noopener">🔎 ${esc(t.q)} <span>${esc(t.traffic)}</span></a>`).join('')+'</div>';
+  }
+  if(!list.length){
+    el.innerHTML = head + '<div class="empty">Nothing in this category in the last scan.</div>';
+    return;
+  }
+  el.innerHTML = head + list.map((p,i)=>`
     <div class="post">
       <div class="top">
         <span class="rank">${i+1}</span>
         <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
         <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
-        ${p.deal?'<span class="badge">DEAL</span>':''}
+        ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
       </div>
       <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
       <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
@@ -159,13 +190,20 @@ function render(){
     </div>`).join('');
 }
 
-function toggleDeals(){ dealsOnly=!dealsOnly; document.getElementById('dealsBtn').classList.toggle('on',dealsOnly); render(); }
+function setTab(t){
+  tab=t;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  render();
+}
 
 function copyList(){
-  if(!feed||!feed.posts.length) return toast('No data yet');
-  const list=feed.posts.filter(p=>!dealsOnly||p.deal).slice(0,15);
-  const txt='📡 KL Radar — scanned '+ago(feed.scanned_at)+'\n'
-    +list.map((p,i)=>`${i+1}. @${p.u} ${p.measured?'📈':'⏱'} ${p.velStr}${p.deal?' 🍔DEAL':''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
+  const list=currentList().slice(0,15);
+  if(!list.length) return toast('Nothing to copy in this tab');
+  const names={all:'All',event:'Events',deal:'Food deals',launch:'Launches',trend:'Trending topics'};
+  let txt='📡 KL Radar · '+names[tab]+' — scanned '+ago(feed.scanned_at)+'\n'
+    +list.map((p,i)=>`${i+1}. @${p.u} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
+  if(tab==='trend'&&(feed.gtrends||[]).length)
+    txt+='\n\n🔎 Google Trends MY: '+feed.gtrends.slice(0,10).map(t=>t.q+' ('+t.traffic+')').join(' · ');
   navigator.clipboard.writeText(txt).then(()=>toast('List copied — paste into team chat'));
 }
 
