@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Eventful · KL Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23F26F21%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22>📡</text></svg>">
+<style>
+  :root{
+    --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
+    --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .tag{font-size:13px;color:var(--muted)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  button{font-family:'Jost',sans-serif;font-size:14px;font-weight:600;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;cursor:pointer}
+  button.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:10px 22px}
+  button.ghost{background:transparent}
+  .toggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .statusline{font-size:13px;color:var(--muted);margin-top:10px}
+  .hint{background:rgba(242,111,33,.1);border:1px solid rgba(242,111,33,.35);border-radius:14px;padding:10px 14px;font-size:13.5px;margin-bottom:14px;display:none}
+  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px}
+  .post .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .rank{font-weight:800;font-size:15px;color:var(--orange);min-width:22px}
+  .handle{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+  .handle:hover{color:var(--orange)}
+  .vel{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07)}
+  .vel.grow{background:rgba(22,138,61,.12);color:#14722f}
+  .badge{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:99px;background:var(--red);color:#fff}
+  .meta{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .cap{font-size:14px;margin-top:7px;line-height:1.45}
+  .collabs{font-size:12px;color:var(--muted);margin-top:6px}
+  .actions{display:flex;gap:8px;margin-top:10px}
+  .actions a,.actions button{font-size:12.5px;padding:6px 13px;font-weight:600;text-decoration:none;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .actions a.open{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .fails{font-size:12.5px;color:var(--muted);margin:8px 2px}
+  details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}
+  summary{font-weight:700;font-size:15px;cursor:pointer}
+  details .body{font-size:13.5px;line-height:1.55;margin-top:10px;color:var(--ink)}
+  details .body h4{margin:12px 0 4px;font-size:13.5px}
+  details .body code{background:rgba(43,37,33,.07);padding:1px 6px;border-radius:6px;font-size:12.5px}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14.5px}
+  footer{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;line-height:1.6}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">📡</div>
+    <div>
+      <h1>Eventful · KL Radar</h1>
+      <div class="tag">Only the faster-growing posts in KL 🇲🇾</div>
+    </div>
+  </header>
+
+  <div class="panel">
+    <div class="controls">
+      <button class="primary" onclick="loadFeed(true)">🔄 Refresh</button>
+      <button class="toggle" id="dealsBtn" onclick="toggleDeals()">🍔 Deals only</button>
+      <button class="ghost" onclick="copyList()">📋 Copy list</button>
+    </div>
+    <div class="statusline" id="status">Loading latest scan…</div>
+  </div>
+
+  <div class="hint" id="growHint">💡 This scan shows <b>⏱ lifetime averages</b> — the radar's follow-up scan (45 min after the first) upgrades these to <b>📈 true growth rates</b>. Refresh later.</div>
+
+  <div id="results"><div class="empty">Loading…</div></div>
+  <div class="fails" id="fails"></div>
+
+  <details>
+    <summary>✍️ Caption cheat sheet (house style)</summary>
+    <div class="body">
+      <h4>HARD RULE — every food-deal caption has a number</h4>
+      Price (RM78 nett), date (27 Feb), discount (80% OFF) or scarcity count (only 4 days). No number, no post.
+      <h4>Mode 1 · Meme / nostalgia</h4>
+      One casual line, lowercase texting voice ("u", "btw"), POV framing. Credit reposts: <code>Video credit: @handle</code>. 1–2 hashtags.
+      <h4>Mode 2 · Food deal / event (bread &amp; butter)</h4>
+      Conversational hook with dramatic ellipses ("I know… again….. but it's finally back"), then emoji info block one fact per line: 🗓️ dates · ⏰ times · 📍 venue · 🚇 nearest LRT/MRT · 🚗 parking. Asterisk fine print (<code>*T&amp;Cs apply, while stocks last</code>). Casual CTA to sister page. 3–5 hashtags: #malaysia #klfoodie + niche.
+      <h4>Mode 3 · Big sale hype</h4>
+      🚨 ALL-CAPS hook with superlative + scarcity + number ("BIGGEST … ONLY 4 DAYS … UP TO 80% OFF"). Short hype paras, name-drop brands, full emoji info block, close in caps: "SO COME DOWN NOW‼️‼️"
+    </div>
+  </details>
+
+  <details>
+    <summary>ℹ️ How this works</summary>
+    <div class="body">
+      The radar bot scans 18 KL/Malaysia pages every morning (8:00am, then again 8:45am for growth rates) — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo.
+      <h4>Ranking</h4>
+      Fresh posts (≤48h) ranked by <b>engagement velocity</b> — 📈 likes gained per hour between the two morning scans (true trending signal), or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
+      <h4>Why velocity</h4>
+      We want posts that are blowing up <i>right now</i>, so we can cover them early — not posts that are already old news with big totals.
+    </div>
+  </details>
+
+  <footer>
+    Auto-updated every morning · Built for the Eventful team 🧡
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const FEED = 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/results.json';
+let feed = null, dealsOnly = false;
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+function fmt(n){ return (n||0).toLocaleString('en-US'); }
+function ago(sec){ const m=Math.round((Date.now()/1000-sec)/60); if(m<1) return 'just now'; if(m<60) return m+' min ago'; const h=m/60; if(h<24) return h.toFixed(1)+'h ago'; return Math.round(h/24)+'d ago'; }
+
+async function loadFeed(manual){
+  document.getElementById('status').textContent='Loading latest scan…';
+  try{
+    const r = await fetch(FEED+'?t='+Date.now(), {cache:'no-store'});
+    feed = await r.json();
+    render();
+    document.getElementById('status').textContent =
+      'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
+    document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ Pages that failed last scan: '+feed.fails.join('; ') : '';
+    document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
+    if(manual) toast('Updated');
+  }catch(e){
+    document.getElementById('status').textContent='Could not load the feed — check connection and refresh.';
+    document.getElementById('results').innerHTML='<div class="empty">Feed unavailable right now.</div>';
+  }
+}
+
+function render(){
+  const el=document.getElementById('results');
+  if(!feed || !feed.posts.length){ el.innerHTML='<div class="empty">No fresh posts in the last scan.</div>'; return; }
+  const list = feed.posts.filter(p=>!dealsOnly||p.deal).slice(0,25);
+  if(!list.length){ el.innerHTML='<div class="empty">No deal posts in this scan — flip off the Deals filter.</div>'; return; }
+  el.innerHTML = list.map((p,i)=>`
+    <div class="post">
+      <div class="top">
+        <span class="rank">${i+1}</span>
+        <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
+        <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
+        ${p.deal?'<span class="badge">DEAL</span>':''}
+      </div>
+      <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
+      <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
+      ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
+      <div class="actions">
+        <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a>
+        <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleDeals(){ dealsOnly=!dealsOnly; document.getElementById('dealsBtn').classList.toggle('on',dealsOnly); render(); }
+
+function copyList(){
+  if(!feed||!feed.posts.length) return toast('No data yet');
+  const list=feed.posts.filter(p=>!dealsOnly||p.deal).slice(0,15);
+  const txt='📡 KL Radar — scanned '+ago(feed.scanned_at)+'\n'
+    +list.map((p,i)=>`${i+1}. @${p.u} ${p.measured?'📈':'⏱'} ${p.velStr}${p.deal?' 🍔DEAL':''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
+  navigator.clipboard.writeText(txt).then(()=>toast('List copied — paste into team chat'));
+}
+
+loadFeed(false);
+</script>
+</body>
+</html>
