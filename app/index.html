@@ -18,6 +18,9 @@
   body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
   .wrap{max-width:720px;margin:0 auto;padding:20px 16px 80px}
   header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .region{display:flex;gap:5px}
+  .region button{font-size:13px;padding:7px 12px;font-weight:700}
+  .region button.on{background:var(--orange);color:#fff;border-color:var(--orange)}
   .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
   h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
   .tag{font-size:13px;color:var(--muted)}
@@ -65,15 +68,19 @@
 <div class="wrap">
   <header>
     <div class="logo">📡</div>
-    <div>
-      <h1>Eventful · KL Radar</h1>
-      <div class="tag">Only the faster-growing posts in KL 🇲🇾</div>
+    <div style="flex:1">
+      <h1 id="title">Eventful · KL Radar</h1>
+      <div class="tag" id="tagline">Only the faster-growing posts in KL 🇲🇾</div>
+    </div>
+    <div class="region" id="regionSwitch">
+      <button data-r="my" class="on" onclick="setRegion('my')">🇲🇾 KL</button>
+      <button data-r="sg" onclick="setRegion('sg')">🇸🇬 SG</button>
     </div>
   </header>
 
   <div class="panel">
     <div class="controls">
-      <button class="primary" onclick="loadFeed(true)">🔄 Refresh</button>
+      <button class="primary" id="refreshBtn" onclick="refresh()">📡 Rescan now</button>
       <button class="ghost" onclick="copyList()">📋 Copy list</button>
     </div>
     <div class="tabs" id="tabs">
@@ -108,9 +115,11 @@
   <details>
     <summary>ℹ️ How this works</summary>
     <div class="body">
-      The radar bot scans 21 Malaysia pages every morning (8:00am, then again 8:45am for growth rates) — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo.
+      The radar bot scans every morning at 8:00am, then again 8:45am for growth rates. <b>🇲🇾 KL</b> watches 21 pages — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo. <b>🇸🇬 SG</b> watches 13 — Ladyironchef, TheSmartLocal, Seth Lui, Daniel Food Diary, Miss Tam Chiak, Eatbook, Deenise Glitz, Great Deals SG, Honeycombers, Little Day Out.
+      <h4>📡 Rescan now</h4>
+      Sends a live request to the radar bot, which rescans Instagram on the spot (~2 min) and this page updates itself. Throttled to one rescan per 10 minutes; if the bot's machine is asleep you'll get the latest stored scan instead.
       <h4>Categories</h4>
-      🎪 Events · 🍔 Food deals · 🆕 Launches are auto-detected from captions of the content pages. 📰 <b>Trending topics</b> is different: it pulls the fastest-growing posts from Malaysia's viral news pages (WeirdKaya, SAYS, World of Buzz) plus live Google Trends MY searches — raw material for reactive content and jokes, not reposts.
+      🎪 Events · 🍔 Food deals · 🆕 Launches are auto-detected from captions of the content pages. 📰 <b>Trending topics</b> is different: it pulls the fastest-growing posts from the region's viral news pages (KL: WeirdKaya, SAYS, World of Buzz · SG: Mothership, SGAG, Stomp) plus live Google Trends searches — raw material for reactive content and jokes, not reposts.
       <h4>Ranking</h4>
       Fresh posts (≤48h) ranked by <b>engagement velocity</b> — 📈 likes gained per hour between the two morning scans (true trending signal), or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
       <h4>Why velocity</h4>
@@ -125,29 +134,86 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const FEED = 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/results.json';
+const FEEDS = {
+  my: 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/results.json',
+  sg: 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/results-sg.json',
+};
+const REGION_META = {
+  my: {title:'Eventful · KL Radar', tag:'Only the faster-growing posts in KL 🇲🇾'},
+  sg: {title:'Eventful · SG Radar', tag:'Only the faster-growing posts in SG 🇸🇬'},
+};
+const NTFY = 'https://ntfy.sh/eventful-radar-d54978b786de';
 const CAT_BADGE = {deal:'🍔 DEAL', event:'🎪 EVENT', launch:'🆕 LAUNCH', trend:'📰 NEWS', other:''};
-let feed = null, tab = 'all';
+let feed = null, tab = 'all', rescanning = false;
+let region = localStorage.getItem('klr_region') || 'my';
+
+function setRegion(r){
+  region = r; localStorage.setItem('klr_region', r);
+  document.querySelectorAll('#regionSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.r===r));
+  document.getElementById('title').textContent = REGION_META[r].title;
+  document.getElementById('tagline').textContent = REGION_META[r].tag;
+  document.title = REGION_META[r].title;
+  feed = null; render();
+  loadFeed(false);
+}
+
+async function refresh(){
+  if(rescanning) return;
+  rescanning = true;
+  const btn=document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = '📡 Rescanning…';
+  await loadFeed(false, true);
+  const before = feed ? feed.scanned_at : 0;
+  try{ await fetch(NTFY, {method:'POST', body: region}); }catch(e){}
+  const t0 = Date.now(), maxMs = 5*60*1000;
+  document.getElementById('status').textContent = 'Scan requested — radar bot is rescanning Instagram now (takes ~2 min)…';
+  while(Date.now()-t0 < maxMs){
+    await new Promise(r=>setTimeout(r,20000));
+    await loadFeed(false, true);
+    if(feed && feed.scanned_at > before){
+      renderStatus(); toast('Fresh scan loaded ✅');
+      btn.disabled=false; btn.textContent='📡 Rescan now'; rescanning=false;
+      return;
+    }
+    const s = Math.round((Date.now()-t0)/1000);
+    document.getElementById('status').textContent = 'Waiting for radar bot… '+s+'s (scan takes ~2 min; throttle is 1 rescan per 10 min)';
+  }
+  document.getElementById('status').textContent = 'Radar bot didn’t answer (Mac asleep, or a rescan ran <10 min ago) — showing the latest data below.';
+  btn.disabled=false; btn.textContent='📡 Rescan now'; rescanning=false;
+}
 
 function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function fmt(n){ return (n||0).toLocaleString('en-US'); }
 function ago(sec){ const m=Math.round((Date.now()/1000-sec)/60); if(m<1) return 'just now'; if(m<60) return m+' min ago'; const h=m/60; if(h<24) return h.toFixed(1)+'h ago'; return Math.round(h/24)+'d ago'; }
 
-async function loadFeed(manual){
-  document.getElementById('status').textContent='Loading latest scan…';
+function renderStatus(){
+  if(!feed) return;
+  document.getElementById('status').textContent =
+    'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
+  document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ Pages that failed last scan: '+feed.fails.join('; ') : '';
+  document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
+}
+
+async function loadFeed(manual, quiet){
+  if(!quiet) document.getElementById('status').textContent='Loading latest scan…';
+  const forRegion = region;
   try{
-    const r = await fetch(FEED+'?t='+Date.now(), {cache:'no-store'});
-    feed = await r.json();
+    const r = await fetch(FEEDS[forRegion]+'?t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('feed '+r.status);
+    const f = await r.json();
+    if(forRegion !== region) return;  // user switched region mid-fetch
+    feed = f;
     render();
-    document.getElementById('status').textContent =
-      'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
-    document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ Pages that failed last scan: '+feed.fails.join('; ') : '';
-    document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
-    if(manual) toast('Updated');
+    if(!quiet){ renderStatus(); if(manual) toast('Updated'); }
   }catch(e){
-    document.getElementById('status').textContent='Could not load the feed — check connection and refresh.';
-    document.getElementById('results').innerHTML='<div class="empty">Feed unavailable right now.</div>';
+    if(forRegion !== region) return;
+    if(!quiet){
+      document.getElementById('status').textContent = forRegion==='sg'
+        ? 'No SG scan yet — hit 📡 Rescan now to run the first one.'
+        : 'Could not load the feed — check connection and refresh.';
+      document.getElementById('results').innerHTML='<div class="empty">No data for this region yet.</div>';
+    }
   }
 }
 
@@ -200,14 +266,14 @@ function copyList(){
   const list=currentList().slice(0,15);
   if(!list.length) return toast('Nothing to copy in this tab');
   const names={all:'All',event:'Events',deal:'Food deals',launch:'Launches',trend:'Trending topics'};
-  let txt='📡 KL Radar · '+names[tab]+' — scanned '+ago(feed.scanned_at)+'\n'
+  let txt='📡 '+(region==='sg'?'SG':'KL')+' Radar · '+names[tab]+' — scanned '+ago(feed.scanned_at)+'\n'
     +list.map((p,i)=>`${i+1}. @${p.u} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
   if(tab==='trend'&&(feed.gtrends||[]).length)
-    txt+='\n\n🔎 Google Trends MY: '+feed.gtrends.slice(0,10).map(t=>t.q+' ('+t.traffic+')').join(' · ');
+    txt+='\n\n🔎 Google Trends '+(region==='sg'?'SG':'MY')+': '+feed.gtrends.slice(0,10).map(t=>t.q+' ('+t.traffic+')').join(' · ');
   navigator.clipboard.writeText(txt).then(()=>toast('List copied — paste into team chat'));
 }
 
-loadFeed(false);
+setRegion(region);
 </script>
 </body>
 </html>
