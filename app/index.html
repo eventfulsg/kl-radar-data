@@ -38,7 +38,10 @@
   .gchip span{color:var(--muted);font-weight:500}
   .statusline{font-size:13px;color:var(--muted);margin-top:10px}
   .hint{background:rgba(242,111,33,.1);border:1px solid rgba(242,111,33,.35);border-radius:14px;padding:10px 14px;font-size:13.5px;margin-bottom:14px;display:none}
-  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px}
+  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px;display:flex;gap:12px}
+  .post .body{flex:1;min-width:0}
+  .thumb{width:104px;height:104px;object-fit:cover;border-radius:12px;flex:none;background:rgba(43,37,33,.06)}
+  @media (max-width:520px){.thumb{width:76px;height:76px}}
   .post .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .rank{font-weight:800;font-size:15px;color:var(--orange);min-width:22px}
   .handle{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
@@ -240,19 +243,22 @@ function render(){
   }
   el.innerHTML = head + list.map((p,i)=>`
     <div class="post">
-      <div class="top">
-        <span class="rank">${i+1}</span>
-        <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
-        <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
-        ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
+      <div class="body">
+        <div class="top">
+          <span class="rank">${i+1}</span>
+          <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
+          <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
+          ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
+        </div>
+        <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
+        <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
+        ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
+        <div class="actions">
+          <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a>
+          <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
+        </div>
       </div>
-      <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
-      <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
-      ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
-      <div class="actions">
-        <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a>
-        <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
-      </div>
+      ${p.img?`<a href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
     </div>`).join('');
 }
 
