@@ -38,10 +38,15 @@
   .gchip span{color:var(--muted);font-weight:500}
   .statusline{font-size:13px;color:var(--muted);margin-top:10px}
   .hint{background:rgba(242,111,33,.1);border:1px solid rgba(242,111,33,.35);border-radius:14px;padding:10px 14px;font-size:13.5px;margin-bottom:14px;display:none}
-  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px;display:flex;gap:12px}
+  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;display:flex;gap:16px;align-items:flex-start}
   .post .body{flex:1;min-width:0}
-  .thumb{width:104px;height:104px;object-fit:cover;border-radius:12px;flex:none;background:rgba(43,37,33,.06)}
-  @media (max-width:520px){.thumb{width:76px;height:76px}}
+  .thumb-link{flex:none;width:280px;max-width:100%;display:block}
+  .thumb{width:100%;height:auto;display:block;border-radius:14px;background:rgba(43,37,33,.06);min-height:120px}
+  @media (max-width:680px){
+    .post{flex-direction:column}
+    .thumb-link{order:-1;width:100%}
+    .thumb{min-height:200px}
+  }
   .post .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .rank{font-weight:800;font-size:15px;color:var(--orange);min-width:22px}
   .handle{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
@@ -258,7 +263,7 @@ function render(){
           <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
         </div>
       </div>
-      ${p.img?`<a href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
+      ${p.img?`<a class="thumb-link" href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
     </div>`).join('');
 }
 
