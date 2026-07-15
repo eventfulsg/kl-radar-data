@@ -53,6 +53,9 @@
   .handle:hover{color:var(--orange)}
   .vel{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07)}
   .vel.grow{background:rgba(22,138,61,.12);color:#14722f}
+  .mult{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07);color:var(--muted)}
+  .mult.hot{background:rgba(242,111,33,.14);color:#c2570f}
+  .mult.fire{background:var(--orange);color:#fff}
   .badge{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:99px;background:var(--red);color:#fff}
   .meta{font-size:12.5px;color:var(--muted);margin-top:5px}
   .cap{font-size:14px;margin-top:7px;line-height:1.45}
@@ -129,9 +132,9 @@
       <h4>Categories</h4>
       🎪 Events · 🍔 Food deals · 🆕 Launches are auto-detected from captions of the content pages. 📰 <b>Trending topics</b> is different: it pulls the fastest-growing posts from the region's viral news pages (KL: WeirdKaya, SAYS, World of Buzz · SG: Mothership, SGAG, Stomp) plus live Google Trends searches — raw material for reactive content and jokes, not reposts.
       <h4>Ranking</h4>
-      Fresh posts (≤48h) ranked by <b>engagement velocity</b> — 📈 likes gained per hour between the two morning scans (true trending signal), or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
-      <h4>Why velocity</h4>
-      We want posts that are blowing up <i>right now</i>, so we can cover them early — not posts that are already old news with big totals.
+      Fresh posts (≤48h) ranked by ⚡ <b>outperformance</b> — how far a post is above the posting page's own usual numbers (median engagement of that page's older posts, adjusted for how young the post is so new posts get a fair shot). "3.4× their usual" means this post already has 3.4 times the engagement a normal post from that page would have at the same age. Velocity breaks ties: 📈 likes gained per hour between the two morning scans, or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
+      <h4>Why outperformance</h4>
+      A big page's routine post always has big totals — that's not a trend, that's Tuesday. A smaller page suddenly doing 4× its usual numbers means the CONTENT is what's blowing up, so we can cover it early. Orange badge = 2× or more, solid orange = 4× or more.
     </div>
   </details>
 
@@ -225,10 +228,16 @@ async function loadFeed(manual, quiet){
   }
 }
 
+function bySurprise(a,b){
+  // Primary: outperformance vs the page's own usual (missing = neutral 1).
+  // Tiebreaker: engagement velocity. Feeds are pre-sorted the same way, but
+  // sorting here keeps older feeds without `mult` rendering sensibly too.
+  return ((b.mult??1)-(a.mult??1)) || ((b.score||0)-(a.score||0));
+}
 function currentList(){
   if(!feed) return [];
-  if(tab==='trend') return (feed.trending||[]);
-  const posts = feed.posts||[];
+  if(tab==='trend') return (feed.trending||[]).slice().sort(bySurprise);
+  const posts = (feed.posts||[]).slice().sort(bySurprise);
   return tab==='all' ? posts : posts.filter(p=>p.cat===tab);
 }
 
@@ -252,6 +261,7 @@ function render(){
         <div class="top">
           <span class="rank">${i+1}</span>
           <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
+          ${p.mult!=null?`<span class="mult ${p.mult>=4?'fire':p.mult>=2?'hot':''}">⚡ ${p.mult}× their usual</span>`:''}
           <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
           ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
         </div>
@@ -278,7 +288,7 @@ function copyList(){
   if(!list.length) return toast('Nothing to copy in this tab');
   const names={all:'All',event:'Events',deal:'Food deals',launch:'Launches',trend:'Trending topics'};
   let txt='📡 '+(region==='sg'?'SG':'KL')+' Radar · '+names[tab]+' — scanned '+ago(feed.scanned_at)+'\n'
-    +list.map((p,i)=>`${i+1}. @${p.u} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
+    +list.map((p,i)=>`${i+1}. @${p.u}${p.mult!=null?' ⚡'+p.mult+'× their usual ·':''} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
   if(tab==='trend'&&(feed.gtrends||[]).length)
     txt+='\n\n🔎 Google Trends '+(region==='sg'?'SG':'MY')+': '+feed.gtrends.slice(0,10).map(t=>t.q+' ('+t.traffic+')').join(' · ');
   navigator.clipboard.writeText(txt).then(()=>toast('List copied — paste into team chat'));
