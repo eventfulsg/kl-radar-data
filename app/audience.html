@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Eventful · Audience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23F26F21%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22>📇</text></svg>">
+<style>
+  :root{
+    --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
+    --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .tag{font-size:13px;color:var(--muted)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+  .tile b{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .tile span{font-size:12.5px;color:var(--muted)}
+  .tile.hot b{color:var(--orange)}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px}
+  .droprow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--line);font-size:14px}
+  .droprow:first-of-type{border-top:none}
+  .droprow .nm{flex:1;min-width:0}
+  .droprow .nm small{display:block;color:var(--muted)}
+  .stat{font-weight:700;font-size:13.5px;background:rgba(43,37,33,.06);border-radius:99px;padding:3px 11px;white-space:nowrap}
+  .stat.orange{background:rgba(242,111,33,.13);color:#c2570f}
+  .stat.green{background:rgba(22,138,61,.12);color:#14722f}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+  td{padding:7px 8px;border-bottom:1px dashed var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+  .scroll{overflow-x:auto}
+  input{font-family:'Jost',sans-serif;font-size:15px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink)}
+  button{font-family:'Jost',sans-serif;font-size:15px;font-weight:700;border-radius:999px;border:1px solid var(--orange);background:var(--orange);color:#fff;padding:11px 22px;cursor:pointer;margin-top:10px}
+  .muted{font-size:12.5px;color:var(--muted);line-height:1.5}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">📇</div>
+    <div style="flex:1">
+      <h1>Eventful · Audience</h1>
+      <div class="tag">The database the drops are building — internal only</div>
+    </div>
+  </header>
+
+  <div class="panel" id="gate">
+    <h3>🔐 Team access</h3>
+    <input type="password" id="tok" placeholder="Dashboard token">
+    <button onclick="unlock()">Open dashboard</button>
+    <p class="muted" style="margin-top:10px">The token is the <code>DASH_TOKEN</code> environment variable on Vercel.</p>
+  </div>
+
+  <div id="dash" style="display:none">
+    <div class="tiles" id="tiles"></div>
+    <div class="panel" style="margin-top:14px">
+      <h3>📦 Per-drop capture</h3>
+      <div id="drops"></div>
+    </div>
+    <div class="panel">
+      <h3>🕐 Latest signups (last 50)</h3>
+      <div class="scroll"><table id="recent"></table></div>
+      <p class="muted" style="margin-top:10px">Full database lives in Shopify → Customers. Segment by tag (<code>drop-001</code>, <code>drops-waitlist</code>) to target past drops; export from there for WhatsApp broadcasts.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function fmt(n){ return (n||0).toLocaleString('en-US'); }
+
+async function unlock(){
+  const tok = document.getElementById('tok').value.trim();
+  if(!tok) return;
+  localStorage.setItem('evd_tok', tok);
+  loadDash(tok);
+}
+
+async function loadDash(tok){
+  const gate=document.getElementById('gate'), dash=document.getElementById('dash');
+  try{
+    const r = await fetch('/api/audience?token='+encodeURIComponent(tok));
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error||r.status);
+    if(!d.recent){ throw new Error('bad_token'); } // token didn't unlock full mode
+    gate.style.display='none'; dash.style.display='block';
+
+    document.getElementById('tiles').innerHTML = `
+      <div class="tile hot"><b>${fmt(d.database_total)}</b><span>people in the database</span></div>
+      <div class="tile"><b>${fmt(d.waitlist_total)}</b><span>waitlist signups</span></div>
+      <div class="tile"><b>${fmt(d.buyers_total)}</b><span>have bought a drop</span></div>
+      <div class="tile"><b>${d.consent_rate_sample!=null?d.consent_rate_sample+'%':'—'}</b><span>marketing consent (last 50)</span></div>`;
+
+    document.getElementById('drops').innerHTML = (d.drops||[]).map(x=>`
+      <div class="droprow">
+        <div class="nm"><b>${esc(x.id)}</b> · ${esc(x.title)}<small>with ${esc(x.partner)} · ${esc(x.status)}</small></div>
+        <span class="stat orange">${fmt(x.signups)} signups</span>
+        ${x.sold!=null?`<span class="stat green">${fmt(x.sold)}/${fmt(x.supply)} sold</span>`:''}
+      </div>`).join('') || '<div class="empty">No drops configured yet.</div>';
+
+    document.getElementById('recent').innerHTML =
+      '<tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>Consent</th><th>Drops</th><th>When</th></tr>'
+      + (d.recent||[]).map(x=>`<tr>
+          <td>${esc(x.name)||'—'}</td><td>${esc(x.email)}</td><td>${esc(x.phone)||'—'}</td>
+          <td>${x.email_consent==='SUBSCRIBED'?'✅':'—'}${x.sms_consent==='SUBSCRIBED'?' 📱':''}</td>
+          <td>${x.tags.map(esc).join(', ')}</td>
+          <td>${new Date(x.created_at).toLocaleDateString('en-SG',{day:'numeric',month:'short'})}</td>
+        </tr>`).join('');
+  }catch(e){
+    localStorage.removeItem('evd_tok');
+    gate.style.display='block'; dash.style.display='none';
+    document.getElementById('tok').placeholder = e.message==='not_configured'
+      ? 'API not configured yet — see README-DROPS.md' : 'Wrong token — try again';
+    document.getElementById('tok').value='';
+  }
+}
+
+const saved = localStorage.getItem('evd_tok');
+if(saved) loadDash(saved);
+</script>
+</body>
+</html>

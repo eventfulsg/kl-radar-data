@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eventful · Drops</title>
+<meta name="description" content="Limited food drops in Singapore. Pre-order, skip the queue. When it's gone, it's gone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23F26F21%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22>🔥</text></svg>">
+<style>
+  :root{
+    --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
+    --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .tag{font-size:13px;color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:14px}
+  .card .pad{padding:16px}
+  .hero-img{width:100%;display:block;background:rgba(43,37,33,.06)}
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.05em;padding:3px 10px;border-radius:99px}
+  .pill.ed{background:var(--ink);color:#fff}
+  .pill.live{background:rgba(22,138,61,.14);color:#14722f}
+  .pill.soon{background:rgba(242,111,33,.14);color:#c2570f}
+  .pill.gone{background:var(--red);color:#fff}
+  h2{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:8px}
+  .by{font-size:13.5px;color:var(--muted);margin-top:3px}
+  .priceRow{display:flex;align-items:baseline;gap:10px;margin-top:12px}
+  .price{font-size:28px;font-weight:800;color:var(--orange)}
+  .value{font-size:15px;color:var(--muted);text-decoration:line-through}
+  .left{font-size:13.5px;font-weight:700;margin-left:auto;background:rgba(196,18,48,.1);color:var(--red);padding:4px 12px;border-radius:99px}
+  .info{font-size:14.5px;line-height:1.7;margin-top:12px}
+  .details{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px;font-size:13.5px;color:var(--muted);line-height:1.55}
+  .details li{margin:4px 0 4px 18px}
+  .cd{display:flex;gap:8px;margin-top:14px}
+  .cd div{flex:1;background:rgba(43,37,33,.05);border-radius:14px;text-align:center;padding:10px 4px}
+  .cd b{display:block;font-size:22px;font-weight:800}
+  .cd span{font-size:11px;color:var(--muted);letter-spacing:.06em}
+  button,.btn{font-family:'Jost',sans-serif;font-size:15px;font-weight:700;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:12px 22px;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+  .btn.primary,button.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+  .btn.block,button.block{display:block;width:100%;margin-top:14px}
+  .wl h3{font-size:17px;font-weight:800}
+  .wl p{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .wl input[type=text],.wl input[type=email],.wl input[type=tel]{
+    font-family:'Jost',sans-serif;font-size:15px;width:100%;margin-top:10px;
+    padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink)}
+  .wl input:focus{outline:2px solid rgba(242,111,33,.45);border-color:var(--orange)}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.45}
+  .consent input{margin-top:3px;accent-color:var(--orange);width:16px;height:16px;flex:none}
+  .hp{position:absolute;left:-9999px;opacity:0}
+  .ok{background:rgba(22,138,61,.1);border:1px solid rgba(22,138,61,.3);border-radius:14px;padding:14px;margin-top:14px;font-size:14.5px;display:none}
+  .err{color:var(--red);font-size:13px;margin-top:10px;display:none}
+  footer{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;line-height:1.6}
+  footer a{color:var(--muted)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🔥</div>
+    <div style="flex:1">
+      <h1>Eventful · Drops</h1>
+      <div class="tag">Limited food drops. When it's gone, it's gone. 🇸🇬</div>
+    </div>
+  </header>
+
+  <div id="drop"><div class="empty">Loading the drop…</div></div>
+
+  <div class="card wl">
+    <div class="pad">
+      <h3>🔔 Never miss a drop</h3>
+      <p>Every drop is limited and sells out. Waitlist members get the link before we post it — first dibs, every time.</p>
+      <form id="wlForm">
+        <input type="text" id="fName" placeholder="First name" autocomplete="given-name" maxlength="60">
+        <input type="tel" id="fPhone" placeholder="WhatsApp number (e.g. 9123 4567)" autocomplete="tel" maxlength="20">
+        <input type="email" id="fEmail" placeholder="Email" autocomplete="email" required maxlength="120">
+        <input type="text" class="hp" id="fHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="consent">
+          <input type="checkbox" id="fConsent" required>
+          <span>I'm happy for Eventful and its drop partners to send me new drops, deals and event invites by email and WhatsApp. Unsubscribe anytime — we never sell your details to anyone.</span>
+        </label>
+        <button type="submit" class="primary block" id="wlBtn">Get first access 🧡</button>
+        <div class="err" id="wlErr"></div>
+      </form>
+      <div class="ok" id="wlOk"></div>
+    </div>
+  </div>
+
+  <footer>
+    An <b>Eventful</b> thing 🧡 · <a href="mailto:askeventful@gmail.com">askeventful@gmail.com</a><br>
+    Brands: want your own drop? <a href="/partners">Work with us</a>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const FEED = 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/drops.json';
+let currentDrop = null;
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+
+function render(d, stats){
+  currentDrop = d;
+  const el = document.getElementById('drop');
+  if(!d){ el.innerHTML = '<div class="empty">No live drop right now — join the waitlist below so you don\'t miss the next one 👇</div>'; return; }
+  const st = d.status;
+  const pill = st==='live' ? '<span class="pill live">● LIVE NOW</span>'
+             : st==='teaser' ? '<span class="pill soon">DROPPING SOON</span>'
+             : '<span class="pill gone">SOLD OUT</span>';
+  const dropStat = stats && (stats.drops||[]).find(x=>x.id===d.id);
+  const left = dropStat && dropStat.left != null ? dropStat.left : null;
+  el.innerHTML = `
+  <div class="card">
+    ${d.img?`<img class="hero-img" src="${esc(d.img)}" alt="${esc(d.title)}">`:''}
+    <div class="pad">
+      ${pill} <span class="pill ed">${esc(d.edition||'LIMITED DROP')}</span>
+      <h2>${esc(d.title)}</h2>
+      <div class="by">by ${esc(d.partner)} × Eventful</div>
+      <div class="priceRow">
+        <span class="price">${esc(d.price)}</span>
+        ${d.value?`<span class="value">${esc(d.value)}</span>`:''}
+        ${left!=null&&st==='live'?`<span class="left">🔥 only ${left} of ${d.supply} left</span>`:''}
+      </div>
+      <div class="info">
+        🗓️ ${esc(d.window)}<br>
+        📍 ${esc(d.venue)}<br>
+        🎟️ ${esc(d.perk)}
+      </div>
+      ${st==='teaser'&&d.drops_at?`<div class="cd" id="cd"></div>`:''}
+      ${st==='live'?`<a class="btn primary block" href="${esc(d.buy_url)}" target="_blank" rel="noopener">Grab yours before it's gone →</a>`:''}
+      ${st==='ended'?`<div class="btn block" style="pointer-events:none;color:var(--muted)">This one's gone — waitlist below for the next drop 👇</div>`:''}
+      ${(d.details||[]).length?`<ul class="details">${d.details.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>`:''}
+    </div>
+  </div>`;
+  if(st==='teaser'&&d.drops_at) tickCountdown(d.drops_at);
+}
+
+function tickCountdown(ts){
+  const el=document.getElementById('cd'); if(!el) return;
+  const t=()=>{
+    let s=Math.max(0,ts-Date.now()/1000);
+    const dd=Math.floor(s/86400); s-=dd*86400;
+    const hh=Math.floor(s/3600); s-=hh*3600;
+    const mm=Math.floor(s/60); const ss=Math.floor(s-mm*60);
+    el.innerHTML=[[dd,'DAYS'],[hh,'HRS'],[mm,'MIN'],[ss,'SEC']].map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');
+  };
+  t(); setInterval(t,1000);
+}
+
+async function load(){
+  let feed=null, stats=null;
+  try{
+    const r = await fetch(FEED+'?t='+Date.now(),{cache:'no-store'});
+    if(r.ok) feed = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch('/api/audience');
+    if(r.ok) stats = await r.json();
+  }catch(e){}
+  const drops=(feed&&feed.drops)||[];
+  const pick = drops.find(d=>d.status==='live') || drops.find(d=>d.status==='teaser') || drops[drops.length-1] || null;
+  render(pick, stats);
+}
+
+document.getElementById('wlForm').addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  const btn=document.getElementById('wlBtn'), err=document.getElementById('wlErr'), ok=document.getElementById('wlOk');
+  err.style.display='none';
+  if(!document.getElementById('fConsent').checked){ err.textContent='Please tick the box so we\'re allowed to message you 🧡'; err.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Signing you up…';
+  try{
+    const r = await fetch('/api/signup',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: document.getElementById('fName').value,
+        phone: document.getElementById('fPhone').value,
+        email: document.getElementById('fEmail').value,
+        consent: true,
+        hp: document.getElementById('fHp').value,
+        drop: (currentDrop&&currentDrop.id)||'drop-001',
+      }),
+    });
+    const d = await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'signup failed');
+    document.getElementById('wlForm').style.display='none';
+    ok.innerHTML = (d.position?`You're <b>#${d.position}</b> on the list 🧡`:`You're on the list 🧡`)
+      + `<br>We'll WhatsApp/email you the second the next drop goes live.`
+      + `<br><button class="primary" style="margin-top:10px" onclick="navigator.clipboard.writeText(location.origin+'/drops').then(()=>toast('Link copied — send it to a friend'))">Share with a friend 🔗</button>`;
+    ok.style.display='block';
+  }catch(e){
+    err.textContent = e.message==='consent_required' ? 'Please tick the consent box.' : 'Couldn\'t sign you up — try again in a minute.';
+    err.style.display='block';
+    btn.disabled=false; btn.textContent='Get first access 🧡';
+  }
+});
+
+load();
+</script>
+</body>
+</html>

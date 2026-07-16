@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eventful Drops · Work with us</title>
+<meta name="description" content="Sponsor an Eventful drop: put your brand in front of Singapore's most food-obsessed audience — people who pre-pay to skip queues.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23F26F21%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22>🤝</text></svg>">
+<style>
+  :root{
+    --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
+    --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  .wrap{max-width:620px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:6px 0 24px}
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .tag{font-size:13px;color:var(--muted)}
+  .hero{font-size:30px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:10px}
+  .hero em{font-style:normal;color:var(--orange)}
+  .sub{font-size:16px;line-height:1.55;color:var(--muted);margin-bottom:22px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:22px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+  .tile b{display:block;font-size:28px;font-weight:800;color:var(--orange)}
+  .tile span{font-size:12.5px;color:var(--muted)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+  .panel h3{font-size:17px;font-weight:800;margin-bottom:6px}
+  .panel p,.panel li{font-size:14.5px;line-height:1.6}
+  .panel ul{margin:8px 0 0 18px}
+  .why{font-size:14.5px;line-height:1.65}
+  .btn{font-size:15px;font-weight:700;border-radius:999px;background:var(--orange);color:#fff;padding:13px 26px;text-decoration:none;display:inline-block;margin-top:8px}
+  footer{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🤝</div>
+    <div style="flex:1">
+      <h1>Eventful · Drops</h1>
+      <div class="tag">For brands &amp; agencies</div>
+    </div>
+  </header>
+
+  <div class="hero">Reach the people who <em>pre-pay to skip the queue</em>.</div>
+  <div class="sub">Eventful Drops are limited-edition food releases with Singapore's most-hyped stalls and events. Every drop builds a consented, first-party audience of proven local spenders — and your brand can be the next thing we put in front of them.</div>
+
+  <div class="tiles" id="tiles">
+    <div class="tile"><b>—</b><span>people in the Drops audience</span></div>
+    <div class="tile"><b>—</b><span>drops released</span></div>
+    <div class="tile"><b>—</b><span>tickets claimed</span></div>
+  </div>
+
+  <div class="panel">
+    <h3>🔥 Sponsored drop</h3>
+    <p>We design, hype and sell a limited drop around your product or venue — content across the Eventful pages, the drop page, and a WhatsApp/email blast to the waitlist. You get the sales, the queue outside your stall, and the post-campaign report.</p>
+  </div>
+  <div class="panel">
+    <h3>📣 Waitlist takeover</h3>
+    <p>One dedicated send to the Drops audience — real people who opted in to hear about deals and events, not bought impressions. Ideal for launches, festival ticket pushes and promo codes.</p>
+  </div>
+  <div class="panel">
+    <h3>📊 Audience insights</h3>
+    <p>Aggregate, anonymised insights from our drops and trend radar: what's selling out, what's spiking on SG food pages this week, and how your category is moving.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Why it works</h3>
+    <div class="why">
+      Everyone on this list raised their hand: they signed up or paid money for a drop, and consented to hear from us and our partners. We treasure that trust — <b>we never sell or hand over the data itself</b> (PDPA-compliant, single opt-in, unsubscribe anytime). You reach them through us, which is exactly why they still open our messages.
+    </div>
+  </div>
+
+  <a class="btn" href="mailto:askeventful@gmail.com?subject=Sponsored%20drop%20enquiry">Get the media kit →</a>
+
+  <footer>An <b>Eventful</b> thing 🧡 · Singapore</footer>
+</div>
+
+<script>
+function fmt(n){ return (n||0).toLocaleString('en-US'); }
+(async()=>{
+  try{
+    const r = await fetch('/api/audience');
+    if(!r.ok) return;
+    const d = await r.json();
+    const sold = (d.drops||[]).reduce((s,x)=>s+(x.sold||0),0);
+    document.getElementById('tiles').innerHTML = `
+      <div class="tile"><b>${fmt(d.database_total)}+</b><span>people in the Drops audience</span></div>
+      <div class="tile"><b>${(d.drops||[]).length}</b><span>drop${(d.drops||[]).length===1?'':'s'} released</span></div>
+      <div class="tile"><b>${fmt(sold)}</b><span>tickets claimed</span></div>`;
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "updated_at": 1784192400,
+  "shop_domain": "a4aw7f-fd.myshopify.com",
+  "drops": [
+    {
+      "id": "drop-001",
+      "status": "live",
+      "title": "Texas Dino Ribs + Beef Loaded Tater Tots",
+      "edition": "GrillFest Edition",
+      "partner": "Jett BBQ",
+      "price": "S$35",
+      "value": "S$38",
+      "supply": 300,
+      "perk": "Skip-the-queue lane + numbered QR ticket · 300 in existence",
+      "window": "23 July – 16 August 2026 · 4pm–10:30pm, every festival day",
+      "venue": "Sentosa GrillFest",
+      "img": "https://cdn.shopify.com/s/files/1/0830/6547/1190/files/drop001-set-square-v5.jpg?v=1784137635",
+      "buy_url": "https://a4aw7f-fd.myshopify.com/products/the-jett-solo-set",
+      "variant_gid": "gid://shopify/ProductVariant/49045872509142",
+      "details": [
+        "3 slices (100g) of smoked Texas Dino Ribs on mash — soft and juicy (S$20 on the stall menu)",
+        "Full event-special portion of Beef Loaded Tater Tots (S$18 on the stall menu)",
+        "Pre-order here, skip the queue at Sentosa GrillFest. When it's gone, it's gone."
+      ],
+      "drops_at": null
+    }
+  ]
+}
