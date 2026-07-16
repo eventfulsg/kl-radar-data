@@ -76,8 +76,12 @@ You are my outreach assistant for Eventful Singapore (@eventfulsg), a food/event
 
 Read the file outreach/contacts.csv from my repo eventfulsg/kl-radar-data (branch claude/fb-director-outreach-99dqx3). Also read outreach/playbook.md for the email anatomy and sequence rules — follow them exactly.
 
+ALREADY CONTACTED ON LINKEDIN — EXCLUDE THESE ENTIRELY (no email, no LinkedIn note, no follow-up sequence):
+<paste the names here, one per line — if a name below matches a CSV row, skip that row completely and mark it "already_contacted" in the CSV log>
+
 TASK — draft, do NOT send yet:
-1. Take every contact with tier T1, then T2. Skip rows whose email column is empty or marked NONE — for those, instead draft a LinkedIn connection note (≤280 chars) using the same pride point.
+0. Before drafting anything, list back to me which CSV rows you are excluding based on my already-contacted list above, so I can catch mismatches (e.g. same person, different spelling).
+1. Take every remaining contact with tier T1, then T2. Skip rows whose email column is empty or marked NONE — for those, instead draft a LinkedIn connection note (≤280 chars) using the same pride point.
 2. For each contact draft Email 1: ≤120 words, subject ≤7 words containing their brand + a number or their win. Line 1 congratulates the exact pride point from the CSV (rephrase naturally, no adjectives like "amazing"). Line 2 cites one radar-style insight — leave a placeholder {RADAR_STAT} for me to fill with a real number; never invent a statistic. Line 3: one-line content concept specific to their brand. CTA: offer a free 15-min "<Brand> Radar Readout". Sign off as [MY NAME], Eventful (@eventfulsg).
 3. Where email_confidence says COMPANY, PRESS or DIRECTORY, open with one line asking the inbox owner to forward to the named person and title. Where it says PATTERN GUESS, mark the draft [PATTERN — VERIFY BEFORE SEND] at the top and do not treat the address as confirmed.
 4. Also draft Email 2 (day 6, new-data angle) and the day-12 breakup email as reusable templates with {NAME}/{BRAND}/{PRIDE_POINT}/{RADAR_STAT} placeholders — one set per segment (SG F&B, SG FMCG, MY F&B, MY FMCG), not per person.
