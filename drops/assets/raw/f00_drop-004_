@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drop #004 · Zouk Flavour Feud — Eventful Drops (draft)</title>
+<meta name="description" content="Draft preview: Zouk bottled its two legendary shots — Sour Plum Vodka and Chrysanthemum Peach Gin — and we put them in a 48-hour fight. Every bottle is a vote. The losing flavour says sorry, $1 off every hour it trails.">
+<meta property="og:title" content="Drop #004 · Zouk Flavour Feud — Eventful Drops (draft)">
+<meta property="og:description" content="Sour Plum vs Chrys Peach. Pick your side, every bottle is a vote. The losing flavour keeps getting cheaper. Winning side parties at Zouk.">
+<meta name="theme-color" content="#C93D6E">
+<meta property="og:image" content="https://www.eventful-sg.com/preview-478585c2da19/img/drop004-bottles.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#F26F21;
+    --red:#C41230;
+    --pressed:#C93D6E;--peachside:#E07E27;
+    --cream:#F3EADB;
+    --ink:#2B2521;
+    --white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Jost',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    position:relative;
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  .page{position:relative;z-index:1;}
+  .wrap{max-width:480px;margin:0 auto;padding:0 18px;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+
+  /* draft banner */
+  .draft-bar{
+    background:var(--ink);color:var(--white);
+    font-size:12px;font-weight:600;letter-spacing:.04em;
+    text-align:center;padding:9px 16px;line-height:1.5;
+  }
+  .draft-bar b{color:#FFC94A;font-weight:800;letter-spacing:.1em;}
+
+  /* ============ NAV ============ */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;max-width:480px;margin:0 auto;
+  }
+  .logo{display:flex;align-items:center;gap:7px;}
+  .logo img{height:26px;width:auto;display:block;}
+  .logo-drops{
+    font-weight:700;font-size:15px;
+    color:var(--ink);letter-spacing:.14em;text-transform:uppercase;
+    padding-top:2px;
+  }
+  .nav-pill{
+    font-weight:700;font-size:11px;
+    background:var(--pressed);color:var(--white);
+    border-radius:999px;padding:6px 12px;letter-spacing:.04em;
+  }
+
+  .pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill{
+    font-weight:700;font-size:12px;
+    border-radius:999px;padding:6px 14px;
+  }
+  .pill.red{background:var(--pressed);color:var(--white);}
+
+  .btn{
+    display:block;width:100%;border:none;cursor:pointer;
+    font-family:'Jost',sans-serif;font-weight:800;font-size:18px;
+    border-radius:999px;padding:16px;text-align:center;
+    transition:transform .1s;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn.primary{background:var(--orange);color:var(--white);box-shadow:0 8px 22px rgba(242,111,33,.4);}
+
+  /* ============ PRODUCT ============ */
+  .prod-img{
+    border-radius:24px;aspect-ratio:1/1;position:relative;overflow:hidden;
+    background:#F3EADB;margin-bottom:18px;
+  }
+  .prod-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .flash{position:absolute;top:12px;left:12px;}
+  .prod-img img.hero-badge{
+    position:absolute;right:14px;bottom:14px;width:88px;height:88px;
+    left:auto;top:auto;object-fit:contain;
+    border-radius:50%;box-shadow:0 6px 18px rgba(43,32,23,.3);
+    border:3px solid var(--white);
+  }
+  .prod-title{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:6px;}
+  .prod-collab{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:#6b6259;margin-bottom:14px;}
+  .prod-collab b{color:var(--pressed);}
+  .prod-collab .logos{display:flex;flex-shrink:0;}
+  .prod-collab .logos img{width:30px;height:30px;border-radius:50%;border:2px solid var(--white);box-shadow:0 2px 8px rgba(43,32,23,.16);display:block;}
+  .prod-collab .logos img+img{margin-left:-8px;}
+  .price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:18px;}
+  .price{font-weight:800;font-size:32px;color:var(--ink);}
+  .price-note{font-size:12.5px;color:#6b6259;font-weight:500;}
+
+  .includes{background:var(--white);border-radius:20px;padding:18px;margin-bottom:14px;}
+  .includes h3{font-size:16px;margin-bottom:12px;}
+  .inc-item{
+    display:flex;gap:10px;align-items:flex-start;
+    font-size:13.5px;line-height:1.5;margin-bottom:10px;color:#443c35;
+  }
+  .inc-item:last-child{margin-bottom:0;}
+  .inc-check{color:var(--orange);font-weight:800;flex-shrink:0;}
+
+  .redeem-strip{background:var(--ink);border-radius:20px;padding:18px;margin-bottom:14px;}
+  .redeem-strip h3{color:var(--white);font-size:15px;margin-bottom:10px;}
+  .redeem-strip p{color:rgba(255,255,255,.72);font-size:13px;line-height:1.6;}
+  .redeem-strip p b{color:var(--orange);}
+
+  /* story cards */
+  .story{background:var(--white);border-radius:20px;overflow:hidden;margin-bottom:14px;}
+  .story img{width:100%;aspect-ratio:16/10;object-fit:cover;}
+  .story .story-body{padding:16px 18px 18px;}
+  .story h3{font-size:16px;margin-bottom:8px;}
+  .story p{font-size:13.5px;line-height:1.6;color:#443c35;}
+  .story p b{color:var(--pressed);}
+  .story .press{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a8177;margin-top:10px;}
+
+  /* collection slot picker */
+  .slotcard{background:var(--white);border-radius:20px;padding:18px;margin-bottom:14px;}
+  .slotcard h3{font-size:16px;margin-bottom:4px;}
+  .slot-note{font-size:12.5px;color:#6b6259;margin-bottom:14px;}
+  .slot-days{display:flex;gap:8px;margin-bottom:12px;}
+  .slot-day{
+    flex:1;border:2px solid #E5D9C6;border-radius:14px;background:var(--white);
+    font-family:'Jost',sans-serif;font-weight:700;font-size:13px;color:var(--ink);
+    padding:10px 4px;text-align:center;cursor:pointer;line-height:1.3;
+  }
+  .slot-day span{display:block;font-weight:500;font-size:11px;color:#6b6259;}
+  .slot-day.sel{border-color:var(--pressed);background:#FBF1F0;}
+  .slot-hours{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .slot-hour{
+    border:2px solid #E5D9C6;border-radius:12px;background:var(--white);
+    font-family:'Jost',sans-serif;font-weight:600;font-size:13px;color:var(--ink);
+    padding:10px 2px;text-align:center;cursor:pointer;
+  }
+  .slot-hour.sel{border-color:var(--pressed);background:var(--pressed);color:var(--white);}
+  .slot-hour.full{opacity:.4;cursor:not-allowed;text-decoration:line-through;}
+  .slot-hour em{display:block;font-style:normal;font-size:9.5px;font-weight:600;color:var(--orange);}
+  .slot-hour.sel em{color:rgba(255,255,255,.85);}
+  .slot-hour.full em{color:#8a8177;text-decoration:none;}
+  .slot-picked{font-size:12.5px;font-weight:600;color:#6b6259;margin-top:12px;text-align:center;}
+  .slot-picked.on{color:var(--pressed);}
+  .slotcard.nudge{animation:slotnudge .4s ease;}
+  @keyframes slotnudge{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+  .qty-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .qty-label{font-weight:700;font-size:15px;}
+  .qty-cap{font-size:11px;color:#6b6259;font-weight:500;}
+  .qty-ctrl{
+    display:flex;align-items:center;gap:16px;
+    background:var(--white);border-radius:999px;padding:8px 16px;
+  }
+  .qty-btn{
+    width:30px;height:30px;border-radius:50%;border:none;
+    background:var(--cream);font-size:18px;font-weight:700;cursor:pointer;
+    font-family:'Jost',sans-serif;color:var(--ink);
+  }
+  .qty-num{font-weight:800;font-size:18px;min-width:20px;text-align:center;}
+  .sticky-cta{
+    position:sticky;bottom:0;padding:12px 0 6px;
+    background:linear-gradient(180deg,transparent,var(--cream) 30%);
+  }
+  .cta-note{font-size:11.5px;color:#8a8177;text-align:center;padding:8px 0 18px;line-height:1.5;}
+
+  /* partner note */
+  .partner-note{
+    background:var(--pressed);border-radius:20px;padding:20px 18px;margin:6px 0 18px;
+    color:var(--white);
+  }
+  .partner-note .pn-logos{display:flex;margin-bottom:12px;}
+  .partner-note .pn-logos img{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.9);display:block;}
+  .partner-note .pn-logos img+img{margin-left:-11px;}
+  .partner-note h3{font-size:17px;font-weight:800;margin-bottom:8px;}
+  .partner-note p{font-size:13px;line-height:1.65;color:rgba(255,255,255,.88);margin-bottom:8px;}
+  .partner-note p:last-child{margin-bottom:0;}
+  .partner-note b{color:#FFE1A8;}
+
+  .foot{text-align:center;padding:10px 0 34px;font-size:11.5px;color:#8a8177;}
+  .foot b{color:var(--ink);}
+
+  /* ============ DESKTOP ============ */
+  @media (min-width: 900px){
+    .nav{max-width:1020px;padding:20px 18px;}
+    .screen .wrap{max-width:1020px;display:grid;grid-template-columns:1fr 1fr;gap:0 48px;align-items:start;}
+    .screen .wrap > *{grid-column:2;}
+    .screen .wrap > .prod-img{grid-column:1;grid-row:1 / span 12;position:sticky;top:24px;height:auto;margin-bottom:0;}
+    .prod-title{font-size:38px;}
+    .price{font-size:40px;}
+    .sticky-cta{position:static;background:none;padding:14px 0 0;}
+    .foot{max-width:1020px;margin:0 auto;}
+  }
+
+  /* deck-style textured background */
+  body{background-image:url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.8%22%20numOctaves%3D%222%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22matrix%22%20values%3D%220%200%200%200%200.42%200%200%200%200%200.35%200%200%200%200%200.27%200%200%200%200.10%200%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22240%22%20height%3D%22240%22%20filter%3D%22url%28%23n%29%22%2F%3E%3C%2Fsvg%3E');}
+  .bg-scatter{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;}
+  .bg-shape{position:absolute;}
+  .bg-shape svg{width:100%;height:100%;display:block;overflow:visible;}
+
+  .acct-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-weight:700;font-size:12.5px;
+    background:var(--ink);color:var(--white);border-radius:999px;padding:7px 15px;white-space:nowrap;transition:transform .1s,opacity .15s;}
+  .acct-btn:hover{opacity:.88;}
+  .acct-btn svg{width:14px;height:14px;}
+
+  /* demo toast */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--white);font-size:13px;font-weight:600;
+    border-radius:999px;padding:11px 20px;opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;z-index:50;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* feud tally (drop-004 only) */
+  .feud-bar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:#EDE2CF;margin:12px 0 6px;}
+  .feud-bar .fp{background:var(--pressed);}
+  .feud-bar .fh{background:var(--peachside);}
+  .feud-counts{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;}
+  .feud-counts .cp{color:var(--pressed);}
+  .feud-counts .ch{color:var(--peachside);}
+  .side-price{display:block;font-weight:800;font-size:15px;margin-top:3px;}
+  .side-sorry{font-size:10px;font-weight:700;color:var(--peachside);letter-spacing:.03em;}
+</style>
+</head>
+<body>
+<div class="bg-scatter" id="bgScatter" aria-hidden="true"></div>
+
+<div class="draft-bar"><b>DRAFT</b> · Working preview for the Zouk team. Flavours are locked, prices, quantities and feud rules are sample numbers until we lock them together.</div>
+
+<div class="page">
+  <div class="nav">
+    <a class="logo" href="./"><img src="https://cdn.shopify.com/s/files/1/0830/6547/1190/files/eventful-logo.png" alt="eventful"><span class="logo-drops">drops</span></a>
+    <div style="display:flex;align-items:center;gap:12px;"><a class="acct-btn" href="https://shopify.com/83065471190/account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Log in</a><span class="nav-pill">DROP #004</span></div>
+  </div>
+
+  <!-- ============ PRODUCT ============ -->
+  <section class="screen active" id="s2">
+    <div class="wrap">
+      <div class="prod-img">
+        <div class="flash"><span class="pill red">300 PER SIDE IN EXISTENCE</span></div>
+        <img fetchpriority="high" src="img/drop004-bottles.jpg" alt="Zouk Sorry For: Sour Plum Vodka and Chrysanthemum Peach Gin bottles side by side">
+        <img class="hero-badge" src="img/sorryfor-logo.png" alt="Sorry For: by Zouk" style="background:#fff;object-fit:contain;padding:6px;">
+      </div>
+      <h1 class="prod-title">Sour Plum Vodka vs Chrys Peach Gin — The Zouk Flavour Feud</h1>
+      <p class="prod-collab"><span class="logos"><img src="img/eventful-badge.png" alt="Eventful"><img src="img/sorryfor-logo.png" alt="Sorry For: by Zouk" style="background:#fff;object-fit:contain;"></span><span>By <b>Zouk</b> × Eventful · Island-wide delivery · 18+ only</span></p>
+      <div class="price-row">
+        <span class="price">$<span id="prodPrice">49.90</span></span>
+        <span class="price-note">RRP $62 in stores · the trailing flavour keeps dropping $1 an hour</span>
+      </div>
+
+      <div class="includes">
+        <h3>What you get <span style="font-size:11px;color:#8a8177;font-weight:600;">(draft, feud rules TBC with Zouk)</span></h3>
+        <div class="inc-item"><span class="inc-check">✓</span>One 500ml bottle (18% ABV) of your side: Sour Plum Vodka, the bottled Jiak Kim dance-floor shot, or Chrysanthemum Peach Gin, the kopitiam smooth-talker (RRP $62 each in stores)</div>
+        <div class="inc-item"><span class="inc-check">✓</span>Every bottle is one vote for your flavour, the feud board above the buy button keeps score all weekend</div>
+        <div class="inc-item"><span class="inc-check">✓</span>The losing flavour says sorry: its price drops $1 every full hour it trails, floor $39.90, and prices never climb back up</div>
+        <div class="inc-item"><span class="inc-check">✓</span>Feud ends Sunday 11:59pm, 5 backers from the winning side score a booth for four at Zouk with their flavour on ice · numbered ticket, 300 bottles per side</div>
+      </div>
+
+      <div class="story">
+        <img src="img/drop004-pour.jpg" alt="Zouk Sour Plum Vodka being poured over ice" loading="lazy">
+        <div class="story-body">
+          <h3>The shot that ended every Zouk night</h3>
+          <p>Since the Jiak Kim days, one tray of sour plum shots meant the night was officially on. <b>Zouk</b> finally bottled it — suan mei sharpness over smooth vodka at 18% — and the bottle neck literally reads "please accept our apology". So we built a drop where the losing flavour has to apologise. It fits.</p>
+        </div>
+      </div>
+
+      <div class="redeem-strip">
+        <h3>🚚 Delivery &amp; pickup</h3>
+        <p>Island-wide delivery in <b>2 to 4 days</b>, free above $60. <b>18+ only, ID checked at the door.</b> Prefer to collect? Show your QR at the <b>Zouk box office, Clarke Quay</b> on any club night and walk in with your bottle story.</p>
+      </div>
+
+      <!-- ============ SIDE PICKER (demo) ============
+           LAUNCH WIRING: two Shopify variants (Sour Plum / Chrys Peach) on one product;
+           the side rides on the cart permalink like drop-001:
+             https://a4aw7f-fd.myshopify.com/cart/VARIANT_ID:QTY
+           Hourly "loser says sorry" price = scheduled variant price update (Shopify flow),
+           feud board = tiny /api/feud endpoint counting orders per variant. -->
+      <div class="slotcard" id="sideCard">
+        <h3>Pick your side <span style="font-size:11px;color:#8a8177;font-weight:600;">(sample scores)</span></h3>
+        <p class="slot-note">Every bottle is a vote. No fence-sitting.</p>
+        <div class="slot-days" id="sideBtns"></div>
+        <div class="feud-bar"><div class="fp" id="feudP" style="width:58%"></div><div class="fh" style="flex:1"></div></div>
+        <div class="feud-counts"><span class="cp">🍇 TEAM SOUR PLUM · <span id="feudPN">312</span></span><span class="ch"><span id="feudHN">226</span> · TEAM CHRYS PEACH 🍑</span></div>
+        <p class="slot-picked" id="sidePicked">No side picked yet</p>
+      </div>
+
+      <div class="story">
+        <img src="img/drop004-duo.jpg" alt="Both Sorry For: bottles side by side" loading="lazy">
+        <div class="story-body">
+          <h3>The loser says sorry. Literally.</h3>
+          <p>Right now <b>Team Chrys Peach</b> is trailing, so it is apologising at <b>$44.90</b> and dropping $1 every hour it stays behind (floor $39.90). Back the underdog for the steal, or pay full drop price to keep your flavour on top and chase the Zouk booth. Prices only ever go down, nobody gets burnt.</p>
+          <p class="press">RRP $62 · stocked at Cellarbration &amp; FairPrice Finest</p>
+        </div>
+      </div>
+
+      <div class="qty-row">
+        <div>
+          <div class="qty-label">Quantity</div>
+          <div class="qty-cap">Max 6 per person · every bottle is a vote</div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="qty(-1)">−</button>
+          <span class="qty-num" id="qtyNum">1</span>
+          <button class="qty-btn" onclick="qty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="sticky-cta">
+        <!-- DRAFT: no Shopify product yet. Button is demo-only until the deal is locked. -->
+        <button class="btn primary" id="buyBtn" onclick="demoToast()">Pick a side to back · $<span id="buyTotal">49.90</span></button>
+      </div>
+      <p class="cta-note">Draft preview: checkout gets wired to Shopify + HitPay (PayNow, Apple Pay, cards) once the feud rules are locked, same flow as Drop #001. Your side is a Shopify variant, the hourly sorry-price is a scheduled price update, and the feud board counts real orders.</p>
+
+      <div class="partner-note">
+        <div class="pn-logos"><img src="img/eventful-badge.png" alt="Eventful"><img src="img/sorryfor-logo.png" alt="Sorry For: by Zouk" style="background:#fff;object-fit:contain;"><img src="img/zouk-logo.png" alt="Zouk" style="background:#fff;object-fit:contain;padding:4px;"></div>
+        <h3>For the Zouk team 👋</h3>
+        <p>This is a working draft of your Eventful Drop, built on the same live system as Drop #001: pre-orders online, every buyer gets a numbered QR ticket, and the feud board turns two SKUs into a weekend-long spectator sport instead of a discount.</p>
+        <p>Eventful reaches <b>10M+ monthly views</b> and <b>1.8M unique viewers</b>, 91% in Singapore. We announce the feud, both sides campaign for votes in the comments, and the winning-side booth night puts the bottles right back on your dance floor. Prices, quantities, dates and the prize are placeholders here, we lock them together.</p>
+        <p><a href="drop-001" style="display:inline-block;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.55);border-radius:999px;padding:11px 20px;font-weight:700;color:#fff;">See Drop #001 running live →</a></p>
+      </div>
+
+      <div class="foot">A limited pre-order by <b>Eventful Drops</b> × Zouk · Draft, not launched · Drink responsibly, 18+</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="demoToast">Draft demo · checkout is wired up at launch</div>
+
+<script>
+  // ---------- side picker + qty (demo; see LAUNCH WIRING comment above) ----------
+  const SIDES = [
+    { key:'plum',  name:'Sour Plum',   emoji:'🍇', price:49.90, sub:'holding price' },
+    { key:'peach', name:'Chrys Peach', emoji:'🍑', price:44.90, sub:'saying sorry −$1/hr' }
+  ];
+  const sideSel = { side:null };
+  let q = 1;
+  function money(n){ return n.toFixed(2); }
+  function renderSides(){
+    document.getElementById('sideBtns').innerHTML = SIDES.map(s =>
+      '<button type="button" class="slot-day'+(sideSel.side===s.key?' sel':'')+'" data-side="'+s.key+'">'+s.emoji+' '+s.name+
+      '<span class="side-price">$'+money(s.price)+'</span><span class="side-sorry">'+(s.key==='peach'?s.sub:'&nbsp;')+'</span></button>'
+    ).join('');
+  }
+  function current(){ return SIDES.find(s => s.key === sideSel.side); }
+  function renderCta(){
+    const el = document.getElementById('sidePicked');
+    const btn = document.getElementById('buyBtn');
+    const s = current();
+    if(s){
+      el.textContent = 'Backing Team ' + s.name + ' · ' + q + (q>1?' votes':' vote');
+      el.classList.add('on');
+      document.getElementById('prodPrice').textContent = money(s.price);
+      btn.innerHTML = 'Back ' + s.name + ' · $<span id="buyTotal">' + money(s.price*q) + '</span>';
+    } else {
+      el.textContent = 'No side picked yet';
+      el.classList.remove('on');
+      btn.innerHTML = 'Pick a side to back · $<span id="buyTotal">' + money(SIDES[0].price*q) + '</span>';
+    }
+  }
+  function qty(d){
+    q = Math.min(6, Math.max(1, q + d));
+    document.getElementById('qtyNum').textContent = q;
+    renderCta();
+  }
+  let toastT;
+  function showToast(msg){
+    const t = document.getElementById('demoToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+  function demoToast(){
+    if(!sideSel.side){
+      showToast('Pick your side first');
+      const c = document.getElementById('sideCard');
+      c.scrollIntoView({behavior:'smooth', block:'center'});
+      c.classList.remove('nudge'); void c.offsetWidth; c.classList.add('nudge');
+      return;
+    }
+    const s = current();
+    showToast('Draft demo · would check out ' + q + '× Team ' + s.name + ' at $' + money(s.price) + ' each');
+    if(s.key === 'plum') bumpFeud('plum'); else bumpFeud('peach');
+  }
+  // sample feud board
+  let fp = 312, fh = 226;
+  function bumpFeud(side){
+    if(side==='plum') fp += q; else fh += q;
+    document.getElementById('feudPN').textContent = fp;
+    document.getElementById('feudHN').textContent = fh;
+    document.getElementById('feudP').style.width = Math.round(fp/(fp+fh)*100) + '%';
+  }
+  document.getElementById('sideBtns').addEventListener('click', e => {
+    const b = e.target.closest('[data-side]');
+    if(!b) return;
+    sideSel.side = b.getAttribute('data-side');
+    renderSides(); renderCta();
+  });
+  renderSides(); renderCta();
+</script>
+<script>
+// ---- deck-style halftone shapes, scattered down the page (no tiling, no seams) ----
+const HT_COLORS = {pink:'#E7B3AB', gold:'#E4CB8B', teal:'#A9D2C6', peach:'#EDAF83'};
+let __uid = 0;
+function ht(color){
+  const id = 'ht' + (++__uid);
+  return {id, def:'<pattern id="'+id+'" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><circle cx="3.5" cy="3.5" r="2.6" fill="'+color+'"/></pattern>'};
+}
+function svgWrap(inner, def){
+  return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs>'+def+'</defs>'+inner+'</svg>';
+}
+const PIN = 'M100,188 C63,146 22,108 22,70 C22,34 56,12 100,12 C144,12 178,34 178,70 C178,108 137,146 100,188 Z';
+const SHAPES = [
+  () => { const p = ht(HT_COLORS.pink); return svgWrap('<path d="'+PIN+'" fill="url(#'+p.id+')"/>', p.def); },
+  () => { const p = ht(HT_COLORS.gold); return svgWrap('<circle cx="88" cy="88" r="56" fill="none" stroke="url(#'+p.id+')" stroke-width="22"/><rect x="136" y="124" width="58" height="26" rx="13" transform="rotate(45 140 134)" fill="url(#'+p.id+')"/>', p.def); },
+  () => { const p = ht(HT_COLORS.teal); return svgWrap('<circle cx="88" cy="88" r="54" fill="none" stroke="url(#'+p.id+')" stroke-width="32"/><circle cx="88" cy="88" r="20" fill="none" stroke="url(#'+p.id+')" stroke-width="12"/><rect x="134" y="122" width="64" height="34" rx="17" transform="rotate(45 140 134)" fill="url(#'+p.id+')"/>', p.def); },
+  () => { const p = ht(HT_COLORS.gold); return svgWrap('<path d="'+PIN+'" fill="none" stroke="url(#'+p.id+')" stroke-width="20"/>', p.def); },
+  () => { const p = ht(HT_COLORS.peach); return svgWrap('<path d="M16,192 A84,84 0 0 1 184,192 Z" fill="url(#'+p.id+')"/>', p.def); },
+  () => { const p = ht(HT_COLORS.teal); return svgWrap('<path d="'+PIN+'" fill="none" stroke="url(#'+p.id+')" stroke-width="20"/>', p.def); },
+];
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function scatterBg(){
+  const holder = document.getElementById('bgScatter');
+  if(!holder) return;
+  const rnd = mulberry32(7);
+  const W = document.documentElement.clientWidth;
+  const foot = document.querySelector('footer');
+  const maxY = (foot ? foot.offsetTop : document.body.scrollHeight) - 320;
+  holder.innerHTML = '';
+  __uid = 0;
+  const scale = W < 720 ? 0.62 : 1;
+  let y = 60 + rnd()*160;
+  let side = rnd() < .5;
+  let i = 0;
+  while(y < maxY){
+    const size = (240 + rnd()*180) * scale;
+    const x = side ? -size*(0.25 + rnd()*0.25) : W - size*(0.5 + rnd()*0.3);
+    const rot = rnd()*44 - 22;
+    const d = document.createElement('div');
+    d.className = 'bg-shape';
+    d.style.cssText = 'top:'+y+'px;left:'+x+'px;width:'+size+'px;height:'+size+'px;transform:rotate('+rot+'deg);opacity:'+(0.5 + rnd()*0.15);
+    d.innerHTML = SHAPES[i % SHAPES.length]();
+    holder.appendChild(d);
+    y += 300 + size*0.5 + rnd()*240;
+    side = !side;
+    i++;
+  }
+}
+window.addEventListener('load', () => { scatterBg(); setTimeout(scatterBg, 700); });
+window.addEventListener('resize', () => { clearTimeout(window.__sbg); window.__sbg = setTimeout(scatterBg, 200); });
+</script>
+</body>
+</html>
