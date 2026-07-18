@@ -1,16 +1,12 @@
 name: fetch-assets
-# Temporary helper (will be removed after use): downloads the official Zouk
-# "Sorry For:" bottle product photos so they can be embedded in the drop-002
-# mockup. The mockup build sandbox has no egress to the retail sites.
+# Temporary helper (removed after use): downloads the official Zouk "Sorry For:"
+# bottle product photos so they can be embedded in the drop-002 mockup. The
+# mockup build sandbox has no egress to the retail sites. Reads URLs from
+# drops/assets/urls.txt; runs only when that file changes on this branch.
 on:
-  workflow_dispatch:
-    inputs:
-      urls:
-        description: whitespace-separated public URLs to fetch
-        required: true
-      outdir:
-        description: output directory
-        default: drops/assets/raw
+  push:
+    branches: [claude/zouk-drinks-eventful-drops-ogrhg7]
+    paths: [drops/assets/urls.txt]
 permissions:
   contents: write
 jobs:
@@ -20,26 +16,28 @@ jobs:
       - uses: actions/checkout@v4
       - name: fetch urls
         env:
-          URLS: ${{ inputs.urls }}
-          OUT: ${{ inputs.outdir }}
           UA: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
         run: |
-          mkdir -p "$OUT"
+          OUT=drops/assets/raw
+          rm -rf "$OUT" && mkdir -p "$OUT"
           i=0
-          for u in $URLS; do
+          while IFS= read -r u; do
+            [ -z "$u" ] && continue
+            case "$u" in \#*) continue;; esac
             name=$(printf 'f%02d_%s' "$i" "$(basename "${u%%\?*}" | tr -c 'A-Za-z0-9._-' '_' | cut -c1-80)")
             echo "== $u -> $OUT/$name"
             curl -sL --retry 2 --connect-timeout 15 -A "$UA" \
               -H 'Accept: text/html,image/avif,image/webp,image/*,*/*;q=0.8' \
               -H 'Accept-Language: en-SG,en;q=0.9' \
+              -e "https://www.google.com/" \
               "$u" -o "$OUT/$name" -w 'status %{http_code} size %{size_download}\n' || true
             i=$((i+1))
-          done
+          done < drops/assets/urls.txt
           ls -la "$OUT"
       - name: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "assets: fetch bottle photos for drop-002 mockup" || echo "nothing to commit"
+          git commit -m "assets: fetch results for drop-002 mockup" || echo "nothing to commit"
           git push
