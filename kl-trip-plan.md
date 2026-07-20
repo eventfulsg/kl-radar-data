@@ -65,7 +65,7 @@ Rule of the trip, same as the draft: **1 cultural spot + 1 food spot + 1 busines
 
 | Day | Date | Cultural | Food | Business | Zone |
 |---|---|---|---|---|---|
-| 1/8 | Tue 11 | Petronas Towers / KLCC at night | Jalan Alor night market | Setup day: SIM, Grab, recce | KLCC–Bukit Bintang |
+| 1/8 | Tue 11 | Petronas Towers / KLCC at night + Jalan Alor icon walk | Pudu Wai Sek Kai (Glutton Street) — where locals actually eat | Setup day: SIM, Grab, recce | KLCC–Bukit Bintang–Pudu |
 | 2/8 | Wed 12 | FRIM Kepong (forest canopy walk) | Village Park Nasi Lemak, Damansara Uptown | **Dexter** — D Artisan Cheese | NW: Sri Damansara–Kepong |
 | 3/8 | Thu 13 | Sunway / PJ new-township contrast piece | PJ hawker (Seapark or taproom-adjacent) | **Joseph** — Wonderbrew taproom | Petaling Jaya |
 | 4/8 | Fri 14 | Thean Hou Temple | Brickfields banana leaf (Little India) | **Guzai Kopitiam** breakfast meeting | S: Kuchai Lama–Seputeh–Brickfields |
@@ -76,6 +76,7 @@ Rule of the trip, same as the draft: **1 cultural spot + 1 food spot + 1 busines
 | — | Wed 19 | Fly home. Airport outro clip: "so… is Eventful coming to Malaysia?" | | | |
 
 Notes:
+- Every spot carries a local-verdict check (🟢 local-approved / 🟠 tourist icon / 🟡 mixed) in `kl-itinerary.html` — Jalan Alor is demoted to a walk-through (locals call it overpriced; eat at Pudu instead), Hutong is flagged as the mall version (the original Kim Lian Kee since 1927 is on Petaling Street, slotted Day 7 night alongside Wawa Fish from the radar).
 - Day 2 cluster is tight: Dexter's place → FRIM is ~10 min, Village Park ~15 min. Best-planned day of the trip.
 - Day 5 is the hero day: Saturday = live events. Ask Darrell which Gimmetix event is on that weekend and shoot it together.
 - Queues: Village Park and Ho Kow queue hard — go before 9am or expect 45 min. That's fine, queue = content ("locals queue 45 minutes for THIS?").
