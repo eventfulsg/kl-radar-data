@@ -13,79 +13,205 @@
   :root{
     --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
     --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+    --c-deal:#C2570F; --c-event:#7C4DBE; --c-launch:#0891B2; --c-trend:#C41230;
+    --shadow:0 1px 2px rgba(43,37,33,.05);
+    --shadow-lift:0 10px 24px -8px rgba(43,37,33,.22);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  body{
+    font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;
+    background-image:radial-gradient(rgba(43,37,33,.045) 1px,transparent 1px);
+    background-size:22px 22px;
+  }
   .wrap{max-width:720px;margin:0 auto;padding:20px 16px 80px}
-  header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
-  .region{display:flex;gap:5px}
-  .region button{font-size:13px;padding:7px 12px;font-weight:700}
-  .region button.on{background:var(--orange);color:#fff;border-color:var(--orange)}
-  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
-  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
-  .tag{font-size:13px;color:var(--muted)}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}
+
+  /* ── Hero header ─────────────────────────────── */
+  header{
+    position:relative;overflow:hidden;border-radius:22px;
+    background:linear-gradient(135deg,#F58540 0%,var(--orange) 38%,#D93A24 78%,var(--red) 100%);
+    color:#fff;padding:20px 20px 18px;margin-bottom:14px;
+    box-shadow:0 12px 30px -12px rgba(196,18,48,.45);
+  }
+  header::before{ /* radar rings */
+    content:"";position:absolute;inset:-40% -10% -40% 40%;pointer-events:none;
+    background:repeating-radial-gradient(circle at 78% 50%,rgba(255,255,255,.16) 0 1.5px,transparent 1.5px 46px);
+    -webkit-mask-image:linear-gradient(100deg,transparent 30%,#000 75%);
+            mask-image:linear-gradient(100deg,transparent 30%,#000 75%);
+  }
+  .head-top{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .logo{
+    width:52px;height:52px;border-radius:50%;flex:none;position:relative;
+    background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.55);
+    display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;
+  }
+  .logo::after{ /* radar sweep */
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(255,255,255,.55),transparent 70deg,transparent);
+    animation:sweep 4s linear infinite;
+  }
+  @keyframes sweep{to{transform:rotate(360deg)}}
+  h1{font-size:23px;font-weight:800;letter-spacing:-.02em;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .tag{font-size:13.5px;opacity:.92;margin-top:2px}
+  .region{display:flex;gap:5px;margin-left:auto}
+  .region button{
+    font-size:13px;padding:7px 13px;font-weight:700;border:1px solid rgba(255,255,255,.5);
+    background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(2px);
+  }
+  .region button.on{background:#fff;color:var(--orange);border-color:#fff}
+
+  /* ── KPI stat tiles ──────────────────────────── */
+  .stats{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+  @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{
+    background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+    border-radius:14px;padding:10px 12px 9px;backdrop-filter:blur(2px);
+  }
+  .stat .k{font-size:22px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .stat .k small{font-size:13px;font-weight:700;opacity:.85}
+  .stat .l{font-size:11.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;opacity:.88;margin-top:3px}
+
+  /* ── Control panel ───────────────────────────── */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
   .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  button{font-family:'Jost',sans-serif;font-size:14px;font-weight:600;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;cursor:pointer}
-  button.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:10px 22px}
+  button{font-family:'Jost',sans-serif;font-size:14px;font-weight:600;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+  button:hover{transform:translateY(-1px)}
+  button:disabled{opacity:.65;transform:none;cursor:default}
+  button.primary{
+    background:linear-gradient(120deg,var(--orange),#E04A22);border-color:transparent;color:#fff;
+    font-weight:700;font-size:15px;padding:10px 22px;box-shadow:0 6px 14px -6px rgba(242,111,33,.6);
+  }
   button.ghost{background:transparent}
-  .toggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-  .tabs button{font-size:13px;padding:7px 13px}
+  .tabs button{font-size:13px;padding:7px 13px;display:inline-flex;align-items:center;gap:6px}
   .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tabs .cnt{
+    font-size:11px;font-weight:800;min-width:19px;text-align:center;padding:1.5px 6px;border-radius:99px;
+    background:rgba(43,37,33,.08);color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .tabs button.on .cnt{background:rgba(255,255,255,.22);color:#fff}
   .gtrends{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-  .gchip{font-size:12.5px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);text-decoration:none}
+  .gchip{
+    font-size:12.5px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:6px 12px;color:var(--ink);text-decoration:none;transition:transform .12s,border-color .12s;
+  }
+  .gchip:hover{transform:translateY(-1px);border-color:var(--orange)}
   .gchip span{color:var(--muted);font-weight:500}
   .statusline{font-size:13px;color:var(--muted);margin-top:10px}
   .hint{background:rgba(242,111,33,.1);border:1px solid rgba(242,111,33,.35);border-radius:14px;padding:10px 14px;font-size:13.5px;margin-bottom:14px;display:none}
-  .post{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;display:flex;gap:16px;align-items:flex-start}
+
+  /* ── Post cards ──────────────────────────────── */
+  .post{
+    position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:16px 16px 16px 20px;margin-bottom:14px;display:flex;gap:16px;align-items:flex-start;
+    box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s;overflow:hidden;
+  }
+  .post:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+  .post::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(43,37,33,.14)}
+  .post.cat-deal::before{background:var(--c-deal)}
+  .post.cat-event::before{background:var(--c-event)}
+  .post.cat-launch::before{background:var(--c-launch)}
+  .post.cat-trend::before{background:var(--c-trend)}
   .post .body{flex:1;min-width:0}
   .thumb-link{flex:none;width:280px;max-width:100%;display:block}
-  .thumb{width:100%;height:auto;display:block;border-radius:14px;background:rgba(43,37,33,.06);min-height:120px}
+  .thumb{
+    width:100%;height:auto;display:block;border-radius:14px;background:rgba(43,37,33,.06);
+    min-height:120px;border:1px solid var(--line);
+  }
   @media (max-width:680px){
     .post{flex-direction:column}
     .thumb-link{order:-1;width:100%}
     .thumb{min-height:200px}
   }
-  .post .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-  .rank{font-weight:800;font-size:15px;color:var(--orange);min-width:22px}
+  .post .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rank{
+    flex:none;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:13px;background:rgba(43,37,33,.07);color:var(--muted);font-variant-numeric:tabular-nums;
+  }
+  .rank.r1{background:linear-gradient(135deg,var(--orange),var(--red));color:#fff;box-shadow:0 4px 10px -3px rgba(242,111,33,.7)}
+  .rank.r2,.rank.r3{background:rgba(242,111,33,.16);color:#c2570f}
   .handle{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
   .handle:hover{color:var(--orange)}
-  .vel{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07)}
-  .vel.grow{background:rgba(22,138,61,.12);color:#14722f}
-  .mult{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07);color:var(--muted)}
+  .badge{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2.5px 9px;border-radius:99px;background:var(--ink);color:#fff}
+  .badge.b-deal{background:var(--c-deal)}
+  .badge.b-event{background:var(--c-event)}
+  .badge.b-launch{background:var(--c-launch)}
+  .badge.b-trend{background:var(--c-trend)}
+
+  /* outperformance meter */
+  .meterrow{display:flex;align-items:center;gap:10px;margin-top:9px}
+  .mult{flex:none;font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:rgba(43,37,33,.07);color:var(--muted)}
   .mult.hot{background:rgba(242,111,33,.14);color:#c2570f}
-  .mult.fire{background:var(--orange);color:#fff}
-  .badge{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:99px;background:var(--red);color:#fff}
-  .meta{font-size:12.5px;color:var(--muted);margin-top:5px}
-  .cap{font-size:14px;margin-top:7px;line-height:1.45}
+  .mult.fire{background:linear-gradient(120deg,var(--orange),#E04A22);color:#fff}
+  .meter{position:relative;flex:1;height:6px;border-radius:99px;background:rgba(43,37,33,.08);min-width:60px}
+  .meter i{
+    position:absolute;left:0;top:0;bottom:0;border-radius:99px;
+    background:linear-gradient(90deg,#F7A16B,var(--orange));
+  }
+  .meter i.fire{background:linear-gradient(90deg,var(--orange),var(--red))}
+  .meter b{position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:2px;background:rgba(43,37,33,.35)}
+
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+  .chip{
+    font-size:12.5px;font-weight:600;color:var(--muted);background:rgba(43,37,33,.055);
+    border-radius:99px;padding:3px 10px;font-variant-numeric:tabular-nums;
+  }
+  .chip b{color:var(--ink);font-weight:700}
+  .chip.vel{background:rgba(43,37,33,.07);color:var(--ink);font-weight:700;font-size:12.5px}
+  .chip.vel.grow{background:rgba(22,138,61,.12);color:#14722f}
+
+  .cap{font-size:14px;margin-top:9px;line-height:1.45}
   .collabs{font-size:12px;color:var(--muted);margin-top:6px}
-  .actions{display:flex;gap:8px;margin-top:10px}
+  .actions{display:flex;gap:8px;margin-top:11px}
   .actions a,.actions button{font-size:12.5px;padding:6px 13px;font-weight:600;text-decoration:none;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   .actions a.open{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .actions a.open:hover{background:var(--orange);border-color:var(--orange)}
   .fails{font-size:12.5px;color:var(--muted);margin:8px 2px}
-  details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}
+
+  /* skeleton loading */
+  .skel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+  .sk{border-radius:8px;background:linear-gradient(90deg,rgba(43,37,33,.06) 25%,rgba(43,37,33,.12) 50%,rgba(43,37,33,.06) 75%);background-size:200% 100%;animation:shimmer 1.3s infinite}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+  .sk.line{height:14px;margin-bottom:10px}
+  .sk.w40{width:40%}.sk.w70{width:70%}.sk.w90{width:90%}
+  .sk.block{height:120px;margin-bottom:0}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
   summary{font-weight:700;font-size:15px;cursor:pointer}
   details .body{font-size:13.5px;line-height:1.55;margin-top:10px;color:var(--ink)}
   details .body h4{margin:12px 0 4px;font-size:13.5px}
   details .body code{background:rgba(43,37,33,.07);padding:1px 6px;border-radius:6px;font-size:12.5px}
-  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14.5px}
+  .empty{text-align:center;color:var(--muted);padding:44px 10px;font-size:14.5px}
+  .empty .big{font-size:40px;display:block;margin-bottom:10px;filter:grayscale(.2)}
   footer{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;line-height:1.6}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
   .toast.show{opacity:1}
+
+  @media (prefers-reduced-motion:reduce){
+    .logo::after{animation:none}
+    .sk{animation:none}
+    button:hover,.post:hover,.gchip:hover{transform:none}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">📡</div>
-    <div style="flex:1">
-      <h1 id="title">Eventful · KL Radar</h1>
-      <div class="tag" id="tagline">Only the faster-growing posts in KL 🇲🇾</div>
+    <div class="head-top">
+      <div class="logo">📡</div>
+      <div>
+        <h1 id="title">Eventful · KL Radar</h1>
+        <div class="tag" id="tagline">Only the faster-growing posts in KL 🇲🇾</div>
+      </div>
+      <div class="region" id="regionSwitch">
+        <button data-r="my" class="on" onclick="setRegion('my')">🇲🇾 KL</button>
+        <button data-r="sg" onclick="setRegion('sg')">🇸🇬 SG</button>
+      </div>
     </div>
-    <div class="region" id="regionSwitch">
-      <button data-r="my" class="on" onclick="setRegion('my')">🇲🇾 KL</button>
-      <button data-r="sg" onclick="setRegion('sg')">🇸🇬 SG</button>
+    <div class="stats">
+      <div class="stat"><div class="k" id="stPosts">–</div><div class="l">🔥 fresh posts</div></div>
+      <div class="stat"><div class="k" id="stTop">–</div><div class="l">⚡ top vs usual</div></div>
+      <div class="stat"><div class="k" id="stPages">–</div><div class="l">📄 pages watched</div></div>
+      <div class="stat"><div class="k" id="stScan">–</div><div class="l">🕐 last scan</div></div>
     </div>
   </header>
 
@@ -95,18 +221,18 @@
       <button class="ghost" onclick="copyList()">📋 Copy list</button>
     </div>
     <div class="tabs" id="tabs">
-      <button data-tab="all" class="on" onclick="setTab('all')">🔥 All</button>
-      <button data-tab="event" onclick="setTab('event')">🎪 Events</button>
-      <button data-tab="deal" onclick="setTab('deal')">🍔 Food deals</button>
-      <button data-tab="launch" onclick="setTab('launch')">🆕 Launches</button>
-      <button data-tab="trend" onclick="setTab('trend')">📰 Trending topics</button>
+      <button data-tab="all" class="on" onclick="setTab('all')">🔥 All <span class="cnt" data-cnt="all">–</span></button>
+      <button data-tab="event" onclick="setTab('event')">🎪 Events <span class="cnt" data-cnt="event">–</span></button>
+      <button data-tab="deal" onclick="setTab('deal')">🍔 Food deals <span class="cnt" data-cnt="deal">–</span></button>
+      <button data-tab="launch" onclick="setTab('launch')">🆕 Launches <span class="cnt" data-cnt="launch">–</span></button>
+      <button data-tab="trend" onclick="setTab('trend')">📰 Trending topics <span class="cnt" data-cnt="trend">–</span></button>
     </div>
     <div class="statusline" id="status">Loading latest scan…</div>
   </div>
 
   <div class="hint" id="growHint">💡 This scan shows <b>⏱ lifetime averages</b> — the radar's follow-up scan (45 min after the first) upgrades these to <b>📈 true growth rates</b>. Refresh later.</div>
 
-  <div id="results"><div class="empty">Loading…</div></div>
+  <div id="results"></div>
   <div class="fails" id="fails"></div>
 
   <details>
@@ -132,7 +258,7 @@
       <h4>Categories</h4>
       🎪 Events · 🍔 Food deals · 🆕 Launches are auto-detected from captions of the content pages. 📰 <b>Trending topics</b> is different: it pulls the fastest-growing posts from the region's viral news pages (KL: WeirdKaya, SAYS, World of Buzz · SG: Mothership, SGAG, Stomp) plus live Google Trends searches — raw material for reactive content and jokes, not reposts.
       <h4>Ranking</h4>
-      Fresh posts (≤48h) ranked by ⚡ <b>outperformance</b> — how far a post is above the posting page's own usual numbers (median engagement of that page's older posts, adjusted for how young the post is so new posts get a fair shot). "3.4× their usual" means this post already has 3.4 times the engagement a normal post from that page would have at the same age. Velocity breaks ties: 📈 likes gained per hour between the two morning scans, or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝.
+      Fresh posts (≤48h) ranked by ⚡ <b>outperformance</b> — how far a post is above the posting page's own usual numbers (median engagement of that page's older posts, adjusted for how young the post is so new posts get a fair shot). "3.4× their usual" means this post already has 3.4 times the engagement a normal post from that page would have at the same age. Velocity breaks ties: 📈 likes gained per hour between the two morning scans, or ⏱ lifetime likes/hour on first sighting. Collab posts across the Foodie network are deduped and tagged 🤝. The orange bar on each post shows outperformance at a glance — the dark tick marks 1× (that page's normal); the bar maxes out at 6×.
       <h4>Why outperformance</h4>
       A big page's routine post always has big totals — that's not a trend, that's Tuesday. A smaller page suddenly doing 4× its usual numbers means the CONTENT is what's blowing up, so we can cover it early. Orange badge = 2× or more, solid orange = 4× or more.
     </div>
@@ -155,6 +281,7 @@ const REGION_META = {
 };
 const NTFY = 'https://ntfy.sh/eventful-radar-d54978b786de';
 const CAT_BADGE = {deal:'🍔 DEAL', event:'🎪 EVENT', launch:'🆕 LAUNCH', trend:'📰 NEWS', other:''};
+const METER_MAX = 6;   // meter bar caps at 6× outperformance
 let feed = null, tab = 'all', rescanning = false;
 let region = localStorage.getItem('klr_region') || 'my';
 
@@ -196,6 +323,7 @@ async function refresh(){
 function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function fmt(n){ return (n||0).toLocaleString('en-US'); }
+function fmtShort(n){ n=n||0; if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'')+'k'; return ''+n; }
 function ago(sec){ const m=Math.round((Date.now()/1000-sec)/60); if(m<1) return 'just now'; if(m<60) return m+' min ago'; const h=m/60; if(h<24) return h.toFixed(1)+'h ago'; return Math.round(h/24)+'d ago'; }
 
 function renderStatus(){
@@ -204,6 +332,104 @@ function renderStatus(){
     'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
   document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ Pages that failed last scan: '+feed.fails.join('; ') : '';
   document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
+}
+
+function renderStats(){
+  const set=(id,v)=>{document.getElementById(id).innerHTML=v};
+  if(!feed){ ['stPosts','stTop','stPages','stScan'].forEach(id=>set(id,'–')); return; }
+  const top = Math.max(0,...(feed.posts||[]).map(p=>p.mult||0));
+  set('stPosts', feed.posts.length);
+  set('stTop', top ? top+'<small>×</small>' : '–');
+  set('stPages', feed.pages);
+  set('stScan', '<small>'+esc(ago(feed.scanned_at))+'</small>');
+}
+
+function renderTabCounts(){
+  const counts = {all:0,event:0,deal:0,launch:0,trend:0};
+  if(feed){
+    counts.all = (feed.posts||[]).length;
+    counts.trend = (feed.trending||[]).length;
+    (feed.posts||[]).forEach(p=>{ if(counts[p.cat]!=null) counts[p.cat]++; });
+  }
+  document.querySelectorAll('#tabs .cnt').forEach(el=>{
+    el.textContent = feed ? counts[el.dataset.cnt] : '–';
+  });
+}
+
+function bySurprise(a,b){
+  // Primary: outperformance vs the page's own usual (missing = neutral 1).
+  // Tiebreaker: engagement velocity. Feeds are pre-sorted the same way, but
+  // sorting here keeps older feeds without `mult` rendering sensibly too.
+  return ((b.mult??1)-(a.mult??1)) || ((b.score||0)-(a.score||0));
+}
+function currentList(){
+  if(!feed) return [];
+  if(tab==='trend') return (feed.trending||[]).slice().sort(bySurprise);
+  const posts = (feed.posts||[]).slice().sort(bySurprise);
+  return tab==='all' ? posts : posts.filter(p=>p.cat===tab);
+}
+
+function meterHTML(mult){
+  if(mult==null) return '';
+  const w = Math.min(mult,METER_MAX)/METER_MAX*100;
+  const tick = 1/METER_MAX*100;
+  return `<div class="meter" title="${mult}× this page's usual engagement (tick = 1×, bar caps at ${METER_MAX}×)" aria-hidden="true">
+    <i class="${mult>=4?'fire':''}" style="width:${w.toFixed(1)}%"></i><b style="left:${tick.toFixed(1)}%"></b></div>`;
+}
+
+function skeletonHTML(){
+  return Array.from({length:3},()=>`
+    <div class="skel">
+      <div class="sk line w40"></div>
+      <div class="sk line w90"></div>
+      <div class="sk line w70"></div>
+      <div class="sk block"></div>
+    </div>`).join('');
+}
+
+function render(){
+  const el=document.getElementById('results');
+  renderStats(); renderTabCounts();
+  if(!feed){ el.innerHTML = skeletonHTML(); return; }
+  const list = currentList().slice(0,25);
+  let head='';
+  if(tab==='trend'){
+    const gt=(feed.gtrends||[]).slice(0,10);
+    if(gt.length) head='<div class="gtrends">'+gt.map(t=>
+      `<a class="gchip" href="https://www.google.com/search?q=${encodeURIComponent(t.q)}" target="_blank" rel="noopener">🔎 ${esc(t.q)} <span>${esc(t.traffic)}</span></a>`).join('')+'</div>';
+  }
+  if(!list.length){
+    el.innerHTML = head + '<div class="empty"><span class="big">🦗</span>Nothing in this category in the last scan.</div>';
+    return;
+  }
+  el.innerHTML = head + list.map((p,i)=>`
+    <div class="post ${CAT_BADGE[p.cat]?'cat-'+p.cat:''}">
+      <div class="body">
+        <div class="top">
+          <span class="rank ${i<3?'r'+(i+1):''}">${i+1}</span>
+          <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
+          ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge b-'+p.cat+'">'+CAT_BADGE[p.cat]+'</span>':''}
+        </div>
+        ${p.mult!=null?`<div class="meterrow">
+          <span class="mult ${p.mult>=4?'fire':p.mult>=2?'hot':''}">⚡ ${p.mult}× their usual</span>
+          ${meterHTML(p.mult)}
+        </div>`:''}
+        <div class="chips">
+          <span class="chip vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
+          <span class="chip">❤️ <b>${fmtShort(p.likes)}</b></span>
+          <span class="chip">💬 <b>${fmtShort(p.comments)}</b></span>
+          ${p.views?`<span class="chip">▶️ <b>${fmtShort(p.views)}</b></span>`:''}
+          <span class="chip">🕐 posted ${p.ageH}h before scan</span>
+        </div>
+        <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
+        ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
+        <div class="actions">
+          <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a>
+          <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
+        </div>
+      </div>
+      ${p.img?`<a class="thumb-link" href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
+    </div>`).join('');
 }
 
 async function loadFeed(manual, quiet){
@@ -223,58 +449,10 @@ async function loadFeed(manual, quiet){
       document.getElementById('status').textContent = forRegion==='sg'
         ? 'No SG scan yet — hit 📡 Rescan now to run the first one.'
         : 'Could not load the feed — check connection and refresh.';
-      document.getElementById('results').innerHTML='<div class="empty">No data for this region yet.</div>';
+      document.getElementById('results').innerHTML='<div class="empty"><span class="big">📡</span>No data for this region yet.</div>';
+      renderStats(); renderTabCounts();
     }
   }
-}
-
-function bySurprise(a,b){
-  // Primary: outperformance vs the page's own usual (missing = neutral 1).
-  // Tiebreaker: engagement velocity. Feeds are pre-sorted the same way, but
-  // sorting here keeps older feeds without `mult` rendering sensibly too.
-  return ((b.mult??1)-(a.mult??1)) || ((b.score||0)-(a.score||0));
-}
-function currentList(){
-  if(!feed) return [];
-  if(tab==='trend') return (feed.trending||[]).slice().sort(bySurprise);
-  const posts = (feed.posts||[]).slice().sort(bySurprise);
-  return tab==='all' ? posts : posts.filter(p=>p.cat===tab);
-}
-
-function render(){
-  const el=document.getElementById('results');
-  if(!feed){ el.innerHTML='<div class="empty">No data yet.</div>'; return; }
-  const list = currentList().slice(0,25);
-  let head='';
-  if(tab==='trend'){
-    const gt=(feed.gtrends||[]).slice(0,10);
-    if(gt.length) head='<div class="gtrends">'+gt.map(t=>
-      `<a class="gchip" href="https://www.google.com/search?q=${encodeURIComponent(t.q)}" target="_blank" rel="noopener">🔎 ${esc(t.q)} <span>${esc(t.traffic)}</span></a>`).join('')+'</div>';
-  }
-  if(!list.length){
-    el.innerHTML = head + '<div class="empty">Nothing in this category in the last scan.</div>';
-    return;
-  }
-  el.innerHTML = head + list.map((p,i)=>`
-    <div class="post">
-      <div class="body">
-        <div class="top">
-          <span class="rank">${i+1}</span>
-          <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
-          ${p.mult!=null?`<span class="mult ${p.mult>=4?'fire':p.mult>=2?'hot':''}">⚡ ${p.mult}× their usual</span>`:''}
-          <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
-          ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
-        </div>
-        <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
-        <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
-        ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
-        <div class="actions">
-          <a class="open" href="${esc(p.url)}" target="_blank" rel="noopener">Open post ↗</a>
-          <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
-        </div>
-      </div>
-      ${p.img?`<a class="thumb-link" href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
-    </div>`).join('');
 }
 
 function setTab(t){
