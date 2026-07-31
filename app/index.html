@@ -154,6 +154,14 @@ const REGION_META = {
   sg: {title:'Eventful · SG Radar', tag:'Only the faster-growing posts in SG 🇸🇬'},
 };
 const NTFY = 'https://ntfy.sh/eventful-radar-d54978b786de';
+const STATUS_URL = 'https://raw.githubusercontent.com/eventfulsg/kl-radar-data/main/scan-status.json';
+async function fetchStatus(){
+  try{
+    const r = await fetch(STATUS_URL+'?t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) return null;
+    return await r.json();
+  }catch(e){ return null; }
+}
 const CAT_BADGE = {deal:'🍔 DEAL', event:'🎪 EVENT', launch:'🆕 LAUNCH', trend:'📰 NEWS', other:''};
 let feed = null, tab = 'all', rescanning = false;
 let region = localStorage.getItem('klr_region') || 'my';
@@ -175,6 +183,7 @@ async function refresh(){
   btn.disabled = true; btn.textContent = '📡 Rescanning…';
   await loadFeed(false, true);
   const before = feed ? feed.scanned_at : 0;
+  const stBefore = (await fetchStatus())?.at || 0;
   try{ await fetch(NTFY, {method:'POST', body: region}); }catch(e){}
   const t0 = Date.now(), maxMs = 5*60*1000;
   document.getElementById('status').textContent = 'Scan requested — radar bot is rescanning Instagram now (takes ~2 min)…';
@@ -183,6 +192,14 @@ async function refresh(){
     await loadFeed(false, true);
     if(feed && feed.scanned_at > before){
       renderStatus(); toast('Fresh scan loaded ✅');
+      btn.disabled=false; btn.textContent='📡 Rescan now'; rescanning=false;
+      return;
+    }
+    const st = await fetchStatus();
+    if(st && st.at > stBefore && st[region] && st[region] !== 'ok' && st[region] !== 'skip'){
+      document.getElementById('status').textContent =
+        '⚠️ The radar bot DID rescan, but Instagram rate-limited it (temporary, usually clears within the hour). Showing the latest good scan below — try again in ~30 min.';
+      toast('Instagram rate-limited the rescan');
       btn.disabled=false; btn.textContent='📡 Rescan now'; rescanning=false;
       return;
     }
@@ -198,20 +215,28 @@ function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.
 function fmt(n){ return (n||0).toLocaleString('en-US'); }
 function ago(sec){ const m=Math.round((Date.now()/1000-sec)/60); if(m<1) return 'just now'; if(m<60) return m+' min ago'; const h=m/60; if(h<24) return h.toFixed(1)+'h ago'; return Math.round(h/24)+'d ago'; }
 function postedStr(p){
-  // p.t = exact posted timestamp (feeds from 31 Jul 2026 on); older feeds only have ageH
-  if(!p.t) return 'posted '+p.ageH+'h before scan';
-  const d=new Date(p.t*1000);
+  // p.t = exact posted timestamp (feeds from 31 Jul 2026 on); for older feeds
+  // derive it from scan time minus post age (accurate to ~6 min)
+  const t = p.t || (feed && feed.scanned_at && p.ageH!=null ? feed.scanned_at - p.ageH*3600 : null);
+  if(!t) return 'posted '+p.ageH+'h before scan';
+  const d=new Date(t*1000);
   const date=d.toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'});
   const time=d.toLocaleTimeString('en-SG',{hour:'numeric',minute:'2-digit'}).toLowerCase().replace(' ','');
-  return 'posted '+date+' '+time+' · '+ago(p.t);
+  return 'posted '+date+' '+time+' · '+ago(t);
 }
 
 function renderStatus(){
   if(!feed) return;
   document.getElementById('status').textContent =
     'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
-  document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ IG blocked these pages this scan (retried every run): '+feed.fails.join('; ') : '';
+  document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ '+feed.fails.join('; ') : '';
   document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
+  // if a rescan attempt NEWER than this feed got rate-limited, say so
+  fetchStatus().then(st=>{
+    if(st && st.at > feed.scanned_at && st[region] && st[region] !== 'ok' && st[region] !== 'skip'){
+      document.getElementById('status').textContent += ' · ⚠️ rescan attempt '+ago(st.at)+' was rate-limited by IG';
+    }
+  });
 }
 
 async function loadFeed(manual, quiet){
