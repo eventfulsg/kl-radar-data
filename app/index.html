@@ -242,10 +242,11 @@ function bySurprise(a,b){
   // sorting here keeps older feeds without `mult` rendering sensibly too.
   return ((b.mult??1)-(a.mult??1)) || ((b.score||0)-(a.score||0));
 }
+const BLOCKED_HANDLES = new Set(['thesmartlocalsg']); // removed on Joston's ask 31 Jul 2026 — belt-and-braces vs stale cached feeds
 function currentList(){
   if(!feed) return [];
-  if(tab==='trend') return (feed.trending||[]).slice().sort(bySurprise);
-  const posts = (feed.posts||[]).slice().sort(bySurprise);
+  if(tab==='trend') return (feed.trending||[]).filter(p=>!BLOCKED_HANDLES.has(p.u)).sort(bySurprise);
+  const posts = (feed.posts||[]).filter(p=>!BLOCKED_HANDLES.has(p.u)).sort(bySurprise);
   return tab==='all' ? posts : posts.filter(p=>p.cat===tab);
 }
 
