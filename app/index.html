@@ -126,7 +126,7 @@
   <details>
     <summary>ℹ️ How this works</summary>
     <div class="body">
-      The radar bot scans every morning at 8:00am, then again 8:45am for growth rates. <b>🇲🇾 KL</b> watches 21 pages — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo. <b>🇸🇬 SG</b> watches 14 — focus pages Shout, Deenise Glitz, Great Deals SG, SG Deals &amp; Freebies (scanned first every run), plus Ladyironchef, Seth Lui, Daniel Food Diary, Miss Tam Chiak, Eatbook, Honeycombers, Little Day Out. Heads up: Instagram currently blocks a few pages (incl. Great Deals SG) from anonymous scanning — they're retried every run and show in the ⚠️ line below the feed until IG unblocks them.
+      The radar bot scans every morning at 8:00am, then again 8:45am for growth rates. <b>🇲🇾 KL</b> watches 21 pages — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo. <b>🇸🇬 SG</b> watches 14 — focus pages Shout, Deenise Glitz, Great Deals SG, SG Deals &amp; Freebies (scanned first every run), plus Ladyironchef, Seth Lui, Daniel Food Diary, Miss Tam Chiak, Eatbook, Honeycombers, Little Day Out. Heads up: Instagram currently blocks a few pages (incl. Great Deals SG) from anonymous scanning. For those the radar automatically pulls their own blog or Telegram channel instead — those posts show a 🔗 pill ("via their blog / Telegram") and link to the article or Telegram post. The ⚠️ line below the feed says which pages ran on fallback.
       <h4>📡 Rescan now</h4>
       Sends a live request to the radar bot, which rescans Instagram on the spot (~2 min) and this page updates itself. Throttled to one rescan per 10 minutes; if the bot's machine is asleep you'll get the latest stored scan instead.
       <h4>Categories</h4>
@@ -271,7 +271,7 @@ function render(){
           <span class="rank">${i+1}</span>
           <a class="handle" href="https://www.instagram.com/${esc(p.u)}/" target="_blank" rel="noopener">@${esc(p.u)}</a>
           ${p.mult!=null?`<span class="mult ${p.mult>=4?'fire':p.mult>=2?'hot':''}">⚡ ${p.mult}× their usual</span>`:''}
-          <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
+          <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':p.src?'🔗':'⏱'} ${esc(p.velStr)}</span>
           ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
         </div>
         <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · ${postedStr(p)}</div>
@@ -282,7 +282,7 @@ function render(){
           <button onclick="navigator.clipboard.writeText('${esc(p.url)}').then(()=>toast('Link copied'))">Copy link</button>
         </div>
       </div>
-      ${p.img?`<a class="thumb-link" href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="/api/img?u=${encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
+      ${p.img?`<a class="thumb-link" href="${esc(p.url)}" target="_blank" rel="noopener"><img class="thumb" src="${p.src?esc(p.img):'/api/img?u='+encodeURIComponent(p.img)}" loading="lazy" alt="" onerror="this.parentNode.remove()"></a>`:''}
     </div>`).join('');
 }
 
