@@ -126,7 +126,7 @@
   <details>
     <summary>ℹ️ How this works</summary>
     <div class="body">
-      The radar bot scans every morning at 8:00am, then again 8:45am for growth rates. <b>🇲🇾 KL</b> watches 21 pages — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo. <b>🇸🇬 SG</b> watches 13 — Ladyironchef, TheSmartLocal, Seth Lui, Daniel Food Diary, Miss Tam Chiak, Eatbook, Deenise Glitz, Great Deals SG, Honeycombers, Little Day Out.
+      The radar bot scans every morning at 8:00am, then again 8:45am for growth rates. <b>🇲🇾 KL</b> watches 21 pages — the Foodie Media Bhd network (KL Foodie, Halal Foodie, Penang Foodie, Malaysia Homie, Johor Foodie, Pickie, KL Directory, Travel Rookie, Foodie MY) plus Places Malaysia, TheSmartLocal MY, Lifestyle Asia KL, Hungry Foodie KL, EatNow KL, Things To Do in KL, Events KL, What's on KL, MyPromo. <b>🇸🇬 SG</b> watches 14 — focus pages Shout, Deenise Glitz, Great Deals SG, SG Deals &amp; Freebies (scanned first every run), plus Ladyironchef, Seth Lui, Daniel Food Diary, Miss Tam Chiak, Eatbook, Honeycombers, Little Day Out. Heads up: Instagram currently blocks a few pages (incl. Great Deals SG) from anonymous scanning — they're retried every run and show in the ⚠️ line below the feed until IG unblocks them.
       <h4>📡 Rescan now</h4>
       Sends a live request to the radar bot, which rescans Instagram on the spot (~2 min) and this page updates itself. Throttled to one rescan per 10 minutes; if the bot's machine is asleep you'll get the latest stored scan instead.
       <h4>Categories</h4>
@@ -197,12 +197,20 @@ function esc(s){ const d=document.createElement('div'); d.textContent=s||''; ret
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function fmt(n){ return (n||0).toLocaleString('en-US'); }
 function ago(sec){ const m=Math.round((Date.now()/1000-sec)/60); if(m<1) return 'just now'; if(m<60) return m+' min ago'; const h=m/60; if(h<24) return h.toFixed(1)+'h ago'; return Math.round(h/24)+'d ago'; }
+function postedStr(p){
+  // p.t = exact posted timestamp (feeds from 31 Jul 2026 on); older feeds only have ageH
+  if(!p.t) return 'posted '+p.ageH+'h before scan';
+  const d=new Date(p.t*1000);
+  const date=d.toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'});
+  const time=d.toLocaleTimeString('en-SG',{hour:'numeric',minute:'2-digit'}).toLowerCase().replace(' ','');
+  return 'posted '+date+' '+time+' · '+ago(p.t);
+}
 
 function renderStatus(){
   if(!feed) return;
   document.getElementById('status').textContent =
     'Scanned '+ago(feed.scanned_at)+' · '+feed.pages+' pages · '+feed.posts.length+' fresh posts (≤'+Math.round(feed.window_h)+'h)';
-  document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ Pages that failed last scan: '+feed.fails.join('; ') : '';
+  document.getElementById('fails').textContent = feed.fails && feed.fails.length ? '⚠️ IG blocked these pages this scan (retried every run): '+feed.fails.join('; ') : '';
   document.getElementById('growHint').style.display = feed.posts.some(p=>p.measured) ? 'none' : 'block';
 }
 
@@ -265,7 +273,7 @@ function render(){
           <span class="vel ${p.measured?'grow':''}">${p.measured?'📈':'⏱'} ${esc(p.velStr)}</span>
           ${tab==='all'&&CAT_BADGE[p.cat]?'<span class="badge">'+CAT_BADGE[p.cat]+'</span>':''}
         </div>
-        <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · posted ${p.ageH}h before scan</div>
+        <div class="meta">${fmt(p.likes)} likes · ${fmt(p.comments)} comments${p.views?' · '+fmt(p.views)+' views':''} · ${postedStr(p)}</div>
         <div class="cap">${esc(p.cap)||'<i>(no caption)</i>'}</div>
         ${p.co&&p.co.length?`<div class="collabs">🤝 collab: ${p.co.map(c=>'@'+esc(c)).join(', ')}</div>`:''}
         <div class="actions">
@@ -288,7 +296,7 @@ function copyList(){
   if(!list.length) return toast('Nothing to copy in this tab');
   const names={all:'All',event:'Events',deal:'Food deals',launch:'Launches',trend:'Trending topics'};
   let txt='📡 '+(region==='sg'?'SG':'KL')+' Radar · '+names[tab]+' — scanned '+ago(feed.scanned_at)+'\n'
-    +list.map((p,i)=>`${i+1}. @${p.u}${p.mult!=null?' ⚡'+p.mult+'× their usual ·':''} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
+    +list.map((p,i)=>`${i+1}. @${p.u}${p.mult!=null?' ⚡'+p.mult+'× their usual ·':''} ${p.measured?'📈':'⏱'} ${p.velStr}${CAT_BADGE[p.cat]?' '+CAT_BADGE[p.cat]:''}\n${postedStr(p)}\n${(p.cap||'').slice(0,90)}\n${p.url}`).join('\n\n');
   if(tab==='trend'&&(feed.gtrends||[]).length)
     txt+='\n\n🔎 Google Trends '+(region==='sg'?'SG':'MY')+': '+feed.gtrends.slice(0,10).map(t=>t.q+' ('+t.traffic+')').join(' · ');
   navigator.clipboard.writeText(txt).then(()=>toast('List copied — paste into team chat'));
