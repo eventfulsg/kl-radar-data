@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Eventful · Caption Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23F26F21%22/><text x=%2250%22 y=%2266%22 font-size=%2250%22 text-anchor=%22middle%22>✍️</text></svg>">
+<style>
+  :root{
+    --cream:#F3EADB; --ink:#2B2521; --orange:#F26F21; --red:#C41230;
+    --card:#FFFDF9; --line:rgba(43,37,33,.12); --muted:rgba(43,37,33,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .tag{font-size:13px;color:var(--muted)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+  .panel h2{font-size:15px;font-weight:700;margin-bottom:10px}
+  button{font-family:'Jost',sans-serif;font-size:14px;font-weight:600;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;cursor:pointer}
+  button.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700;font-size:16px;padding:12px 26px;width:100%}
+  button.primary:disabled{opacity:.55;cursor:default}
+  button.ghost{background:transparent;font-size:12.5px;padding:6px 12px}
+  input[type=text],input[type=password],textarea{font-family:'Jost',sans-serif;font-size:14px;width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;color:var(--ink)}
+  textarea{resize:vertical;min-height:64px}
+  label{font-size:13px;font-weight:600;display:block;margin:10px 0 5px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{font-size:13px;padding:7px 13px}
+  .chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .drop{border:2px dashed rgba(43,37,33,.25);border-radius:14px;padding:26px 14px;text-align:center;color:var(--muted);font-size:14px;cursor:pointer;transition:border-color .15s,background .15s}
+  .drop.over{border-color:var(--orange);background:rgba(242,111,33,.06)}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .thumb{position:relative;width:86px;height:86px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .x{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:99px;width:20px;height:20px;font-size:11px;padding:0;line-height:20px}
+  .thumb .vtag{position:absolute;left:3px;bottom:3px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;border-radius:6px;padding:1px 6px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .switch{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;user-select:none}
+  .switch input{accent-color:var(--orange);width:18px;height:18px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .status{font-size:14px;font-weight:600;margin:10px 0;display:none}
+  .status.show{display:block}
+  .spin{display:inline-block;width:14px;height:14px;border:2.5px solid rgba(242,111,33,.3);border-top-color:var(--orange);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-2px;margin-right:7px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+  .opt .top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .opt .modechip{font-size:11.5px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:99px;background:var(--red);color:#fff;text-transform:uppercase}
+  .opt pre{font-family:'Jost',sans-serif;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;background:rgba(43,37,33,.04);border-radius:12px;padding:12px;margin:6px 0 10px}
+  .notes{background:rgba(242,111,33,.08);border:1px solid rgba(242,111,33,.3);border-radius:14px;padding:12px 14px;font-size:13.5px;line-height:1.5;margin-bottom:12px}
+  .notes ul{margin:4px 0 0 18px}
+  .err{background:rgba(196,18,48,.08);border:1px solid rgba(196,18,48,.35);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--red);margin:10px 0;display:none;line-height:1.5;word-break:break-word}
+  details.key{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px}
+  details.key summary{font-weight:700;font-size:14px;cursor:pointer}
+  details.key .body{margin-top:10px}
+  .ok{color:#14722f;font-weight:700;font-size:13px}
+  footer{font-size:12px;color:var(--muted);text-align:center;margin-top:26px;line-height:1.6}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">✍️</div>
+    <div style="flex:1">
+      <h1>Eventful · Caption Studio</h1>
+      <div class="tag">Drop the post in → get captions in the Eventful voice 🧡</div>
+    </div>
+  </header>
+
+  <details class="key" id="keyPanel">
+    <summary>🔑 API key <span id="keyStatus" class="ok"></span></summary>
+    <div class="body">
+      <label>Anthropic API key (stays in this browser only)</label>
+      <div class="row">
+        <input type="password" id="apiKey" placeholder="sk-ant-..." style="flex:1;min-width:200px">
+        <button onclick="saveKey()">Save</button>
+      </div>
+      <div class="hint">Get one at <b>console.anthropic.com</b> → API keys. It's stored in your browser's localStorage and sent only to Anthropic — never to any other server. Each generation costs a few cents.</div>
+    </div>
+  </details>
+
+  <div class="panel">
+    <h2>1 · The post</h2>
+    <div class="drop" id="drop" onclick="document.getElementById('file').click()">
+      📸 Drop your static(s) or video here — or tap to pick<br>
+      <span style="font-size:12px">carousel slides = multiple images · reels = video (we grab 4 frames)</span>
+    </div>
+    <input type="file" id="file" accept="image/*,video/mp4,video/quicktime,video/webm" multiple hidden onchange="addFiles(this.files);this.value=''">
+    <div class="thumbs" id="thumbs"></div>
+    <label>Anything Claude should know? <span style="font-weight:400;color:var(--muted)">(optional — event name, dates, prices, link, brand @handles…)</span></label>
+    <textarea id="context" placeholder="e.g. Bon Odori at Lalaport BBCC, 15–16 Aug, free entry, collab with @lalaport_bbcc"></textarea>
+  </div>
+
+  <div class="panel">
+    <h2>2 · Caption mode</h2>
+    <div class="chips" id="modes">
+      <button data-m="auto" class="on">🤖 Auto-detect</button>
+      <button data-m="meme">😂 Meme / nostalgia</button>
+      <button data-m="event">🎪 Event</button>
+      <button data-m="deal">🍔 Food deal</button>
+      <button data-m="sale">🚨 Big sale hype</button>
+      <button data-m="giveaway">🎁 Giveaway</button>
+      <button data-m="reel">🎥 Reel review</button>
+    </div>
+    <label class="switch" style="margin-top:12px">
+      <input type="checkbox" id="research" checked>
+      🔎 Auto-research the event online (dates, prices, address, what's confirmed)
+    </label>
+    <div class="hint">When on, Claude searches the web for the venue/event and folds verified details (🗓️ ⏰ 📍 💰) into the info block. Takes ~30–90s longer.</div>
+  </div>
+
+  <button class="primary" id="go" onclick="generate()">✍️ Write my captions</button>
+  <div class="status" id="status"></div>
+  <div class="err" id="err"></div>
+  <div id="results"></div>
+
+  <footer>Trained on the tone of 849 @eventful_sg posts · Built for the Eventful team 🧡</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const EXAMPLES = [{"mode": "meme_pov", "likes": 64338, "type": "carousel", "caption": "We just found this guy that posted the Jollibee recipe on instagram and he has like 3,000 other recipes\n\nFollow us @eventfulsg.food , maybe we’ll find KFC’s recipe next :o\n\n#jollibee #cooking #recipe #friedchicken #foodie"}, {"mode": "meme_pov", "likes": 25365, "type": "carousel", "caption": "POV: u’re visiting VivoCity for the first time ever with your family and friends\n\n#singapore #vivocity #nostalgic"}, {"mode": "meme_pov", "likes": 21731, "type": "carousel", "caption": "POV: it’s 2012 and u just got a meal from justacia with the unlimited ice cream \n\n#singapore #downtowneast"}, {"mode": "meme_pov", "likes": 17106, "type": "carousel", "caption": "Follow for more tips & tricks\n\n#tips #tricks #chopped"}, {"mode": "event", "likes": 15247, "type": "carousel", "caption": "I know… IKEA again….. but the iconic Buffet Istimewa is finally back at IKEA Tampines and here’s everything you need to know\n\nIKEA Tampines’ Buffet Istimewa\n🗓️ 27th Feb and 6th, 13th & 20th March\n⏰ 7pm to 9pm (Buffet closes at 8:45pm)\n\n*IKEA Family members get a discounted price of $26.60 (free signups btw)\n*Refer to 3rd slide for full menu\n\nOk follow us on @eventfulsg.food for the best IKEA food\n\n#ikea #singapore #sgfoodie #ikeasg #ikeasingapore"}, {"mode": "event", "likes": 13628, "type": "carousel", "caption": "IM LITERALLY SO HYPED \n\nThe F1 Exhibition 🏎️🏁\n📍: Gardens by the Bay, \n🗓️: From 23rd July\n\nTicket Prices: 🏎️\nAdults (18+): $49+\nYouth (13-17): $40+\nChildren (5-12): $29+\nAge 4 & Under: Free entry\nRacing Simulator: $20\n\nFind out more & Get Tickets at \nhttps://f1exhibition.com/singapore/"}, {"mode": "event", "likes": 7355, "type": "carousel", "caption": "I just hope it still tastes as good though……\n\nFREE CONES!!!!\n📍Available at all Swedish Bistro outlets islandwide\n🗓️ 17th to 18th February 2026\n\n*Only for IKEA Family Members (free signups btw)\n\nFollow @eventfulsg.food for the best food deals in Singapore\n\n#sgfoodie #ikea #singapore"}, {"mode": "event", "likes": 7013, "type": "carousel", "caption": "Idk if i can eat more than 3 pratas tbh\n\nSpingleaf Prata Buffet\n📍 All Springleaf Prata Outlets Islandwide\n🗓️ 5th to 19th March 2026\n⏰ NEWest & RM: 6pm to 6:30am\nAll other outlets: 6pm to before closing\n\n*Buffet booking ends 1.5h before closing\n\nFollow us @eventfulsg.food for only the best food deals in Singapore\n\n#singapore #sgfoodie #buffet #prata"}, {"mode": "deal", "likes": 12465, "type": "carousel", "caption": "wait im omw..\n\nPotato Corner Bring Your Own Tub\n🗓 6th to 12th July\n📍All Outlets\n*choice of 1 flavour\nwhile stocks last. T&C's Apply\n\n#singapore #sgfoodie #sgdeals #potatocorner"}, {"mode": "deal", "likes": 5675, "type": "carousel", "caption": "i tiramissu \n\nBeast & Butterflies All You Can Scoop Tiramisu\n🗓Every Friday, 6PM onwards\n📍 90 Robertson Quay, Level 1, S238259\nPrice: $9.90+\n*While stocks last\n\n#singapore #sgfoodie #sgdeals #tiramisu"}, {"mode": "deal", "likes": 4652, "type": "carousel", "caption": "Isetan NEX has a huge closing down sale of up to 70% OFF, and here are product highlights\n\n📍 Isetan NEX (23 Serangoon Central, 01-50/51, 556083\n⏰ 10:30am to 9pm\n🗓️ Closing down on 26th April 2026\n\n#singapore #nex #isetan #sale #sgsales"}, {"mode": "deal", "likes": 4232, "type": "carousel", "caption": "I WILL be buying omw home...\n\nMunchi Pancakes Pistachio Kunafa\n🗓️: 9th July Onwards\n📍: All Outlets\n📸: @nibbleandread \n\n#singapore #sgfoodie #pistachiokunafa"}, {"mode": "reel", "likes": 10622, "type": "reel", "caption": "You have to get their Birria Beef Grilled Cheese it’s actually insanely good.\n\nBored Tacos\n2 Jln Klapa, 199314\n\n@boredtacossg @jarritossg \n\n#sgfoodie #sgfoodies #singaporefood #singaporefoodie #singapore"}, {"mode": "reel", "likes": 5413, "type": "reel", "caption": "A brutally honest review of the food at Kampong Gelam Bazaar 2025\n\n#sgfoodie #foodiesg #ramadan #kampongglam #kamponggelambazaar #kamponggelam #ramadan2025 #singaporefood #sgfood #foodsg"}, {"mode": "reel", "likes": 3856, "type": "reel", "caption": "SIDES IS FINALLY HERE IN SINGAPORE!!!!! (Opening on 5th June)\n\nSIDES - By The Sidemen\nBugis Plus, 03-25 to 26\n\n@eatsides.sg @eatsides @sidemen @ksi @bugisjunctionxbugisplus \n\n#sgfoodie #eatsides #eatsidessg eatsides #singapore #singaporefood #sidemen #sgfood"}, {"mode": "giveaway", "likes": 15484, "type": "carousel", "caption": "This is probably the craziest event ever at *SCAPE, because they’re taking over the entire building and here are the highlights at every level.\n\nOh and also, we’re doing a giveaway with them so here’s how you can be one of the 5 winners:\n\nYouth Day 2026 Package (worth $46)\n🚗 1x $30 Grab Voucher\n🍪 3x Dubai Chewy Cookie (Yoajung)\n\n1️⃣ Follow @youthdaysg & @eventful_sg\n2️⃣ Comment your fav place to hangout in SG and tag 2 friends!! (bonus if its youth day)\n\n🗓 Giveaway till 3rd July 2026 only\n📍 *SCAPE, 2 Orchard Link, Singapore 237978 (Event is on 5th & 6th July 2026 ONLY)\n\nT&Cs:\n• Winners will be randomly selected via a random name generator\n• Only one entry per person.\n• Prizes are not exchangeable, transferable, or redeemable for cash\n• Youth Day Singapore & Eventful reserve the right to disqualify any participant suspected of fraud, tampering or non-compliance with these Terms & Conditions.\n\n#sggiveaway #singapore #youthday #sgevents"}, {"mode": "giveaway", "likes": 9878, "type": "carousel", "caption": "You’ve probably seen their videos already but here’s exactly what to expect at the biggest Gen Z party in Singapore\n\nWe’re gonna also be doing a giveaway with them, and here’s how you can be one of the 5 winners:\n\nBlock Party Package (worth $65)\n🍗 1x $50 Grab/Wingstop Voucher\n🎁 1x Needoh Nice Cube\n\n1️⃣ Follow @block.partysg & @eventful_sg\n2️⃣ Comment your favourite childhood snack and tag 2 friends!!\n\n🗓 Giveaway till 17th May 2026 only\n📍 Our Tampines Hub (Event is on 23rd May 2026 ONLY)\n\nT&Cs:\n• Winners will be randomly selected via a random name generator\n• Only one entry per person.\n• Prizes are not exchangeable, transferable, or redeemable for cash\n• Block Party & Eventful reserve the right to disqualify any participant suspected of fraud, tampering or non-compliance with these Terms & Conditions.\n\n#sggiveaway #singapore #blockparty #sgevents"}, {"mode": "sale", "likes": 3955, "type": "reel", "caption": "🚨 SINGAPORE’S BIGGEST AUDIO WAREHOUSE SALE IS HERE ONLY FOR 4 DAYS - UP TO 80% OFF! 🎧🎤\n\nThey’re back after so many years and this is their BIGGEST sale. And because they’re direct-from-distributor pricing, you’ll never see prices and deals as good as these. \n\nEnjoy up to 80% OFF retail price and items starting from as low as $10*! PLUS sure-win gifts with purchase 🤯\n\nFrom headphones to speakers, to soundbars, and more — whether you need last-minute Christmas gifts or an audio upgrade, this is your moment.\n\nShop bestselling brands like JBL, Harman Kardon, Denon & more at prices you’ll never find elsewhere.\n\n📅 4–7 Dec\n🕔 9am–6pm\n📍 SKM Industrial Building, 60 Marsiling Road, S739107 (near Republic Polytechnic) \n🚇 Nearest MRT: Woodlands\n🚗 FREE parking at compound \n\nIt’ll only be around for those 4 days and it’ll be gone, well, pretty much forever SO COME DOWN NOW‼️‼️\n\n*T&Cs apply, while stocks last\n\n@imsoundsg @jbl_sg @jblaudio @harmankardon_sg \n\n#warehousesale #singapore #sgsale"}];
+
+const VOICE_GUIDE = `You write Instagram captions for @eventful_sg — Singapore's events & food-deals page. The voice is a Gen Z Singaporean friend hyping up their group chat. Study the real top-performing captions provided and match them EXACTLY in tone, structure, punctuation habits and hashtag style.
+
+VOICE RULES (distilled from 849 real posts):
+- First-person casual reactions. Texting shorthand where natural: "u", "omw", "tbh", "idk", "btw". Singlish is welcome when it fits ("jelak", "sia"). NEVER corporate or ad-speak — no "indulge", "delectable", "don't miss out!", no exclamation-mark spam in prose.
+- Emojis are SPARING in prose (0–2). They live in the info block instead.
+
+MODE: meme — ONE casual line only. POV framing or nostalgia with a specific year ("POV: it's 2012 and u just got…"). Lowercase, no info block, 1–3 hashtags.
+
+MODE: event / deal (the bread & butter) — structure:
+1. HOOK: one personal-reaction line. Styles that work: dramatic ellipses ("I know… IKEA again….. but"), ALL-CAPS hype ("IM LITERALLY SO HYPED", "MY WALLET IS GONNA HATE ME"), or a dry one-liner ("wait im omw..", "i tiramissu").
+2. Blank line, then the event/deal NAME in plain Title Case on its own line.
+3. Emoji info block, ONE fact per line: 🗓️ dates · ⏰ times · 📍 venue + address (postal code if known) · price lines with $ and +/++ notation · 🎫 tickets/entry.
+4. Asterisk fine print: *While stocks last · *T&Cs apply · *free signup notes.
+5. @mentions of the brand/venue, and when food-related a casual CTA to the sister page ("Ok follow us on @eventfulsg.food for the best IKEA food").
+6. 3–5 lowercase hashtags: always #singapore; #sgfoodie for food; plus 1–2 niche tags.
+HARD RULE: every event/deal caption must contain at least one NUMBER — a price, date, discount % or count. No number, no post.
+
+MODE: sale (big sale hype) — 🚨 ALL-CAPS hook with superlative + scarcity + number ("SINGAPORE'S BIGGEST … ONLY 4 DAYS … UP TO 80% OFF"). Short hype paragraphs, name-drop brands, "PLUS …🤯" lines, full info block, loud close.
+
+MODE: giveaway — hype intro about the event, then "here's how you can be one of the X winners:", prize package with emoji bullet list and worth ($), numbered steps (1️⃣ Follow @partner & @eventful_sg  2️⃣ Comment … and tag 2 friends!!), 🗓 giveaway deadline, 📍 location, then a T&Cs bullet list.
+
+MODE: reel — honest first-person verdict with a real caveat ("it's so so good (but a bit jelak)", "get ready to queue at least 30mins"). Then name + address on plain lines, credit @handles, 4–6 hashtags.
+
+LENGTH: memes < 150 chars · deals 150–350 · events 300–600 · giveaways/sales up to 900.
+
+Dates are written like "27th Feb", "6th to 12th July". Prices like "$9.90+", "RM198 nett" style only for MY. Address style: "90 Robertson Quay, Level 1, S238259".`;
+
+const MODE_NAMES = {auto:"Auto-detect", meme:"Meme / nostalgia", event:"Event", deal:"Food deal", sale:"Big sale hype", giveaway:"Giveaway", reel:"Reel review"};
+let media = [];   // {b64, mediaType, isFrame}
+let mode = "auto";
+
+// ---------- key ----------
+function keyVal(){ return localStorage.getItem("es_anthropic_key") || ""; }
+function saveKey(){
+  const v = document.getElementById("apiKey").value.trim();
+  if(!v.startsWith("sk-ant")) return toast("That doesn't look like an Anthropic key");
+  localStorage.setItem("es_anthropic_key", v);
+  refreshKeyUI(); toast("Key saved ✅"); document.getElementById("keyPanel").open = false;
+}
+function refreshKeyUI(){
+  const has = !!keyVal();
+  document.getElementById("keyStatus").textContent = has ? "· saved ✓" : "· needed";
+  document.getElementById("keyStatus").style.color = has ? "#14722f" : "var(--red)";
+  if(!has) document.getElementById("keyPanel").open = true;
+  else document.getElementById("apiKey").value = keyVal();
+}
+refreshKeyUI();
+
+// ---------- media ----------
+const drop = document.getElementById("drop");
+["dragover","dragenter"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",ev=>addFiles(ev.dataTransfer.files));
+
+async function addFiles(files){
+  for(const f of files){
+    try{
+      if(f.type.startsWith("video")){
+        toast("Grabbing frames from video…");
+        const frames = await extractFrames(f, 4);
+        frames.forEach(b64=>media.push({b64, mediaType:"image/jpeg", isFrame:true}));
+      }else if(f.type.startsWith("image")){
+        const b64 = await resizeImage(f, 1400);
+        media.push({b64, mediaType:"image/jpeg", isFrame:false});
+      }
+    }catch(e){ toast("Couldn't read "+f.name); }
+  }
+  if(media.length>10) media = media.slice(0,10);
+  renderThumbs();
+}
+function renderThumbs(){
+  document.getElementById("thumbs").innerHTML = media.map((m,i)=>`
+    <div class="thumb">
+      <img src="data:${m.mediaType};base64,${m.b64}">
+      ${m.isFrame?'<span class="vtag">🎥 frame</span>':''}
+      <button class="x" onclick="media.splice(${i},1);renderThumbs()">✕</button>
+    </div>`).join("");
+}
+function resizeImage(file, maxDim){
+  return new Promise((res,rej)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const sc = Math.min(1, maxDim/Math.max(img.width,img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      res(c.toDataURL("image/jpeg",0.85).split(",")[1]);
+      URL.revokeObjectURL(img.src);
+    };
+    img.onerror = rej;
+    img.src = URL.createObjectURL(file);
+  });
+}
+function extractFrames(file, n){
+  return new Promise((res,rej)=>{
+    const v = document.createElement("video");
+    v.muted = true; v.playsInline = true; v.preload = "metadata";
+    v.src = URL.createObjectURL(file);
+    const frames = [];
+    v.onerror = ()=>rej(new Error("video load failed"));
+    v.onloadedmetadata = async ()=>{
+      const d = v.duration;
+      const times = Array.from({length:n},(_,i)=> d*(i+0.5)/n);
+      const c = document.createElement("canvas");
+      const sc = Math.min(1, 1000/Math.max(v.videoWidth,v.videoHeight));
+      c.width = Math.round(v.videoWidth*sc); c.height = Math.round(v.videoHeight*sc);
+      const ctx = c.getContext("2d");
+      for(const t of times){
+        await new Promise(r=>{ v.onseeked = r; v.currentTime = Math.min(t, Math.max(0,d-0.1)); });
+        ctx.drawImage(v,0,0,c.width,c.height);
+        frames.push(c.toDataURL("image/jpeg",0.8).split(",")[1]);
+      }
+      URL.revokeObjectURL(v.src);
+      res(frames);
+    };
+  });
+}
+
+// ---------- modes ----------
+document.querySelectorAll("#modes button").forEach(b=>b.onclick=()=>{
+  mode = b.dataset.m;
+  document.querySelectorAll("#modes button").forEach(x=>x.classList.toggle("on",x===b));
+});
+
+// ---------- generate ----------
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
+function setStatus(msg){ const s=document.getElementById("status"); if(!msg){s.classList.remove("show");return;} s.innerHTML='<span class="spin"></span>'+msg; s.classList.add("show"); }
+function showErr(msg){ const e=document.getElementById("err"); e.textContent=msg; e.style.display="block"; }
+
+async function generate(){
+  document.getElementById("err").style.display="none";
+  document.getElementById("results").innerHTML="";
+  const key = keyVal();
+  if(!key){ document.getElementById("keyPanel").open=true; return toast("Add your API key first"); }
+  const ctxText = document.getElementById("context").value.trim();
+  if(!media.length && !ctxText) return toast("Drop the post in (or describe it) first");
+  const research = document.getElementById("research").checked;
+
+  const btn = document.getElementById("go");
+  btn.disabled = true;
+  setStatus(research ? "Reading the post, researching online & writing… (can take 1–2 min)" : "Reading the post & writing…");
+
+  const isVideo = media.some(m=>m.isFrame);
+  const userBlocks = media.map(m=>({type:"image", source:{type:"base64", media_type:m.mediaType, data:m.b64}}));
+  userBlocks.push({type:"text", text:
+`Here is the ${isVideo?"video (as "+media.filter(m=>m.isFrame).length+" frames, in order)":"post"} we're publishing${media.length?"":" (no media attached — go by the description)"}.
+Requested mode: ${mode==="auto"?"auto-detect the best mode from the content":MODE_NAMES[mode]}.
+${ctxText?`Extra context from the team (treat as ground truth): ${ctxText}`:"No extra context given."}
+${research?`Research this event/venue/deal online first: find the confirmed dates, times, prices, full address (with postal code), official @handles and anything time-sensitive. Only put facts you verified (or that the team gave you) into the caption; anything uncertain goes in double_check instead.`:`Do NOT search the web. Use only what's visible in the post and the team's context. Put any missing facts (dates/prices/address) as placeholders like [date] and list them in double_check.`}
+
+Write 3 caption options in the @eventful_sg voice. Make them genuinely different angles (e.g. different hooks or modes) — not three rewordings.
+
+Reply with ONLY this JSON (no markdown fences):
+{
+ "post_type": "<mode you chose>",
+ "research_summary": "<2-3 sentences: what you found/verified, or empty string>",
+ "options": [
+   {"label": "<short angle name>", "mode": "<mode>", "caption": "<full caption with real line breaks>"},
+   {"label": "...", "mode": "...", "caption": "..."},
+   {"label": "...", "mode": "...", "caption": "..."}
+ ],
+ "double_check": ["<things the team must verify before posting>"]
+}`});
+
+  const body = {
+    model: "claude-opus-5",
+    max_tokens: 16000,
+    output_config: {effort: "medium"},
+    system: [
+      {type:"text", text: VOICE_GUIDE + "\n\nREAL TOP-PERFORMING CAPTIONS (match this voice):\n" +
+        EXAMPLES.map(e=>`--- [${e.mode} · ${e.type} · ${e.likes.toLocaleString()} likes]\n${e.caption}`).join("\n\n"),
+       cache_control:{type:"ephemeral"}}
+    ],
+    messages: [{role:"user", content:userBlocks}]
+  };
+  if(research) body.tools = [{type:"web_search_20260209", name:"web_search", max_uses:6, user_location:{type:"approximate", country:"SG", timezone:"Asia/Singapore"}}];
+
+  try{
+    let resp = await callClaude(key, body);
+    // continue server-tool pauses
+    let hops = 0;
+    while(resp.stop_reason === "pause_turn" && hops < 5){
+      hops++;
+      setStatus("Still researching… (round "+(hops+1)+")");
+      body.messages = [body.messages[0], {role:"assistant", content: resp.content}];
+      resp = await callClaude(key, body);
+    }
+    if(resp.stop_reason === "refusal") throw new Error("Claude declined this request ("+(resp.stop_details?.category||"policy")+"). Try again without research, or with different media.");
+    const text = (resp.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n");
+    if(!text) throw new Error("Empty response — try again.");
+    renderResults(parseJSON(text), text);
+  }catch(e){
+    showErr(e.message || String(e));
+  }finally{
+    btn.disabled = false; setStatus("");
+  }
+}
+
+async function callClaude(key, body){
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method:"POST",
+    headers:{
+      "content-type":"application/json",
+      "x-api-key": key,
+      "anthropic-version":"2023-06-01",
+      "anthropic-dangerous-direct-browser-access":"true"
+    },
+    body: JSON.stringify(body)
+  });
+  const d = await r.json().catch(()=>null);
+  if(!r.ok){
+    const msg = d?.error?.message || ("HTTP "+r.status);
+    if(r.status===401) throw new Error("API key rejected (401) — check the key in 🔑 API key.");
+    if(r.status===429) throw new Error("Rate limited — wait a minute and try again.");
+    throw new Error(msg);
+  }
+  return d;
+}
+
+function parseJSON(text){
+  let t = text.trim().replace(/^```(json)?/,"").replace(/```$/,"").trim();
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
+  if(a>=0 && b>a) t = t.slice(a, b+1);
+  try{ return JSON.parse(t); }catch(e){ return null; }
+}
+
+function esc(s){ const d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
+
+function renderResults(data, raw){
+  const el = document.getElementById("results");
+  if(!data || !Array.isArray(data.options)){
+    el.innerHTML = `<div class="panel"><h2>Captions</h2><pre style="white-space:pre-wrap;font-family:'Jost';font-size:14px">${esc(raw)}</pre></div>`;
+    return;
+  }
+  let html = "";
+  if(data.research_summary){
+    html += `<div class="notes">🔎 <b>What I found:</b> ${esc(data.research_summary)}</div>`;
+  }
+  data.options.forEach((o,i)=>{
+    const id = "cap"+i;
+    html += `<div class="opt">
+      <div class="top">
+        <span class="modechip">${esc(o.mode||data.post_type||"caption")}</span>
+        <b style="font-size:14px">${esc(o.label||("Option "+(i+1)))}</b>
+      </div>
+      <pre id="${id}">${esc(o.caption)}</pre>
+      <button onclick="copyCap('${id}')">📋 Copy caption</button>
+    </div>`;
+  });
+  if(Array.isArray(data.double_check) && data.double_check.length){
+    html += `<div class="notes">⚠️ <b>Double-check before posting:</b><ul>${data.double_check.map(x=>"<li>"+esc(x)+"</li>").join("")}</ul></div>`;
+  }
+  el.innerHTML = html;
+}
+function copyCap(id){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>toast("Caption copied ✅"));
+}
+</script>
+</body>
+</html>
