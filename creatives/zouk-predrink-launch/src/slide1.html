@@ -162,8 +162,9 @@ function seek(t){
     const dy = -190*ph + 460*ph*ph;
     const x = 442+dx, y = 1060+dy;
     const r = 9 - 4*ph;
-    const op = ph<0.85 ? 0.95 : 0.95*(1-ph)/0.15;
-    if(y < 1255) dh += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="#F7BE7A" stroke="#C97A2E" stroke-width="3" opacity="${op.toFixed(2)}"/>`;
+    // smooth in/out: ramp up on spawn, fade with flight AND as it nears the pool
+    const op = 0.95 * Math.min(ph*8,1) * Math.min(1,(1-ph)/0.15) * Math.max(0, Math.min(1,(1252-y)/45));
+    if(op > 0.02) dh += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="#F7BE7A" stroke="#C97A2E" stroke-width="3" opacity="${op.toFixed(2)}"/>`;
   }
   drops.innerHTML = dh;
   // ripples
@@ -171,7 +172,7 @@ function seek(t){
   let rh='';
   for(let i=0;i<2;i++){
     const ph = ((2*t/T)+i/2)%1;
-    const rx = 50+190*ph, ry = 9+30*ph, op = 0.65*(1-ph);
+    const rx = 50+190*ph, ry = 9+30*ph, op = 0.65*Math.min(ph*6,1)*(1-ph);
     rh += `<ellipse cx="465" cy="1238" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="none" stroke="#C97A2E" stroke-width="4" opacity="${op.toFixed(2)}"/>`;
   }
   rip.innerHTML = rh;
