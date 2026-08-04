@@ -1,0 +1,204 @@
+<meta charset="utf-8">
+<style>
+  @font-face { font-family:'Baloo'; src:url('Baloo2-ExtraBold.ttf'); font-weight:800; }
+  @font-face { font-family:'Baloo'; src:url('Baloo2-Bold.ttf'); font-weight:700; }
+  html,body{margin:0;padding:0;background:#fff;}
+  #stage{width:1080px;height:1350px;position:relative;overflow:hidden;}
+  svg{display:block;}
+  text{font-family:'Baloo',sans-serif;}
+</style>
+<div id="stage">
+<svg id="art" width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="vodkaGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#bcd9ee" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#eaf6ff" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="0.8" stop-color="#cfe6f6" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#a9cfe8" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#dcedf8"/>
+      <stop offset="0.5" stop-color="#f4fafe"/>
+      <stop offset="1" stop-color="#cfe4f2"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="1350" fill="#ffffff"/>
+
+  <!-- small brand mark top-right -->
+  <text x="1032" y="88" font-size="54" font-weight="800" fill="#232C7C" letter-spacing="6" text-anchor="end">ZOUK</text>
+
+  <!-- ============ BOTTLE (pivot = mouth center, local (540,6)) ============ -->
+  <g id="bottleG" transform="translate(20 464) rotate(140 540 6)">
+    <g stroke="#232C7C" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+      <path id="bottleBody" d="M 455 120 L 455 20 Q 455 6 469 6 L 611 6 Q 625 6 625 20 L 625 120
+               Q 625 150 648 172 Q 672 196 672 236 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560
+               L 408 236 Q 408 196 432 172 Q 455 150 455 120 Z" fill="url(#glassGrad)"/>
+      <!-- liquid inside, level roughly world-horizontal at 140deg tilt -->
+      <path d="M 408 280 L 672 500 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560 Z"
+            fill="#dff0fb" stroke="none"/>
+      <path d="M 449 96 L 631 96" fill="none"/>
+      <rect x="420" y="290" width="240" height="220" rx="24" fill="#ffffff"/>
+      <path d="M 455 120 L 455 20 Q 455 6 469 6 L 611 6 Q 625 6 625 20 L 625 120
+               Q 625 150 648 172 Q 672 196 672 236 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560
+               L 408 236 Q 408 196 432 172 Q 455 150 455 120 Z" fill="none"/>
+    </g>
+    <!-- label text counter-rotated to stay readable -->
+    <g transform="rotate(-140 540 400)">
+      <text x="540" y="360" font-size="56" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="4">ZOUK</text>
+      <text x="540" y="424" font-size="62" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="5">VODKA</text>
+      <text x="540" y="462" font-size="24" font-weight="700" fill="#5a63b8" text-anchor="middle">PRE-DRINK RESERVE</text>
+    </g>
+  </g>
+
+  <!-- ============ FAKE FEED UI BANDS ============ -->
+  <g id="uiBands">
+    <rect x="0" y="640" width="1080" height="175" fill="#000000"/>
+    <g transform="translate(40 668)">
+      <path d="M 30 18 C 22 4 0 6 0 24 C 0 40 20 52 30 60 C 40 52 60 40 60 24 C 60 6 38 4 30 18 Z" fill="#ff3040"/>
+    </g>
+    <g transform="translate(150 666)" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round">
+      <path d="M 30 2 C 46 2 60 14 60 30 C 60 46 46 58 30 58 C 24 58 19 57 14 54 L 0 60 L 5 46 C 2 41 0 36 0 30 C 0 14 14 2 30 2 Z"/>
+    </g>
+    <g transform="translate(262 666)" stroke="#ffffff" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M 62 2 L 2 26 L 26 36 L 34 58 L 62 2 Z M 26 36 L 62 2"/>
+    </g>
+    <g transform="translate(984 664)" stroke="#ffffff" stroke-width="6" fill="none" stroke-linejoin="round">
+      <path d="M 0 0 L 44 0 L 44 60 L 22 44 L 0 60 Z"/>
+    </g>
+    <text x="40" y="790" font-size="34" fill="#ffffff"><tspan font-weight="800">zouk</tspan><tspan font-weight="700" fill="#e8e8e8"> The Pre-Drink Package is here 🍸</tspan></text>
+
+    <rect x="0" y="815" width="1080" height="120" fill="#0d0d0d"/>
+    <circle cx="75" cy="875" r="34" fill="#111111" stroke="#ffffff" stroke-width="4"/>
+    <text x="75" y="891" font-size="42" font-weight="800" fill="#ffffff" text-anchor="middle">Z</text>
+    <text x="130" y="890" font-size="36" font-weight="800" fill="#ffffff">zouk</text>
+    <g stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+      <path d="M 980 858 L 1040 858 M 980 876 L 1040 876 M 980 894 L 1040 894"/>
+    </g>
+  </g>
+
+  <!-- ============ POOL (behind mascot) ============ -->
+  <ellipse id="pool" cx="470" cy="1240" rx="260" ry="42" fill="url(#vodkaGrad)" stroke="#8fbcd9" stroke-width="5"/>
+  <g id="ripples"></g>
+
+  <!-- ============ MASCOT (chunky line-art, reclining) ============ -->
+  <g id="mascot" stroke="#232C7C" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="#ffffff">
+    <!-- far leg (raised, bent) : thigh, shin, shoe -->
+    <rect x="745" y="1160" width="195" height="60" rx="30" transform="rotate(-33.7 750 1190)"/>
+    <rect x="870" y="1060" width="60" height="165" rx="30" transform="rotate(-34 900 1090) rotate(55.7 900 1090)"/>
+    <rect x="945" y="1175" width="105" height="64" rx="30" fill="#232C7C" stroke="#232C7C" transform="rotate(10 950 1205)"/>
+    <!-- near leg (raised, bent) : thigh, shin, shoe -->
+    <rect x="735" y="1140" width="205" height="60" rx="30" transform="rotate(-42.9 740 1170)"/>
+    <rect x="850" y="1010" width="60" height="185" rx="30" transform="rotate(-21 880 1040)"/>
+    <rect x="905" y="1125" width="105" height="64" rx="30" fill="#232C7C" stroke="#232C7C" transform="rotate(-32 915 1155)"/>
+    <!-- torso (bean) -->
+    <path d="M 512 1092 Q 600 1060 690 1096 Q 772 1128 760 1182 Q 746 1226 656 1214 Q 558 1202 522 1180 Q 496 1140 512 1092 Z"/>
+    <!-- arm resting on belly + hand -->
+    <path d="M 566 1092 Q 630 1108 660 1146" fill="none"/>
+    <circle cx="668" cy="1156" r="21"/>
+    <!-- neck + head -->
+    <circle id="head" cx="430" cy="1115" r="86"/>
+    <!-- hair quiff peeking out -->
+    <path d="M 372 1046 Q 350 1006 392 1014 Q 384 986 420 1004 Q 428 982 452 1010 Q 486 1018 494 1048" fill="#232C7C" stroke="#232C7C"/>
+    <!-- ear -->
+    <circle cx="506" cy="1130" r="15"/>
+  </g>
+
+  <!-- ============ LIQUID (animated, in front) ============ -->
+  <g id="liquid">
+    <path id="stream" d="" fill="url(#vodkaGrad)" stroke="#8fbcd9" stroke-width="5"/>
+    <path id="blob" d="" fill="url(#vodkaGrad)" stroke="#8fbcd9" stroke-width="5"/>
+    <path id="hl1" d="" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.75"/>
+    <g id="drops"></g>
+  </g>
+</svg>
+</div>
+<script>
+const TAU = Math.PI*2, T = 5.0;             // loop period (s)
+const MX = 560, MY = 470;                   // bottle mouth (pivot world pos)
+const ENDX = 430, ENDY = 1075;              // impact (face)
+
+function cx(y, t){
+  const p = (y - MY) / (ENDY - MY);
+  const base = MX + (ENDX - MX) * (p*p*0.35 + p*0.65);
+  const wob = Math.sin(TAU*(2*t/T) - y/95) * 7 * Math.sin(Math.PI*Math.min(p,1)*0.9+0.15);
+  return base + wob;
+}
+function hw(y, t){
+  const p = (y - MY) / (ENDY - MY);
+  const taper = 30 - 12*p;
+  const glug = 1 + 0.16*Math.sin(TAU*(3*t/T) - y/110);
+  return taper * glug;
+}
+function streamPath(t){
+  const L=[], R=[];
+  for(let y=MY; y<=ENDY; y+=14){
+    const c=cx(y,t), w=hw(y,t);
+    L.push([c-w,y]); R.push([c+w,y]);
+  }
+  let d = 'M '+L[0][0].toFixed(1)+' '+L[0][1];
+  for(const [x,y] of L.slice(1)) d += ' L '+x.toFixed(1)+' '+y;
+  for(let i=R.length-1;i>=0;i--) d += ' L '+R[i][0].toFixed(1)+' '+R[i][1];
+  return d+' Z';
+}
+function hlPath(t){
+  let d='';
+  for(let y=MY+40; y<=ENDY-50; y+=16){
+    const c=cx(y,t), w=hw(y,t);
+    d += (d?' L ':'M ')+(c-w*0.45).toFixed(1)+' '+y;
+  }
+  return d;
+}
+function blobPath(t){
+  const CX=442, CY=1108;
+  const s = 1 + 0.05*Math.sin(TAU*(2*t/T));
+  const pts=[];
+  for(let i=0;i<=28;i++){
+    const a=i/28*TAU;
+    const wobble = 1 + 0.09*Math.sin(5*a + TAU*(2*t/T)) + 0.05*Math.sin(3*a - TAU*(t/T));
+    pts.push([CX+Math.cos(a)*78*s*wobble, CY+Math.sin(a)*74*s*wobble]);
+  }
+  let d='M '+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+  for(const p of pts.slice(1)) d+=' L '+p[0].toFixed(1)+' '+p[1].toFixed(1);
+  return d+' Z';
+}
+function seek(t){
+  t = ((t % T) + T) % T;
+  document.getElementById('stream').setAttribute('d', streamPath(t));
+  document.getElementById('hl1').setAttribute('d', hlPath(t));
+  document.getElementById('blob').setAttribute('d', blobPath(t));
+  const rot = 140 + 1.5*Math.sin(TAU*(2*t/T));
+  document.getElementById('bottleG').setAttribute('transform', `translate(20 464) rotate(${rot} 540 6)`);
+  const pr = 1 + 0.045*Math.sin(TAU*(2*t/T)+1.1);
+  const pool = document.getElementById('pool');
+  pool.setAttribute('rx', (260*pr).toFixed(1));
+  pool.setAttribute('ry', (42*pr).toFixed(1));
+  // droplets
+  const drops = document.getElementById('drops');
+  let dh='';
+  for(let i=0;i<6;i++){
+    const ph = ((2*t/T) + i/6) % 1;
+    const ang = ((i*61)%160+10) * Math.PI/180;
+    const v = 150 + (i%3)*45;
+    const dx = Math.cos(ang)*(i%2?1:-1)*v*ph;
+    const dy = -190*ph + 460*ph*ph;
+    const x = 442+dx, y = 1060+dy;
+    const r = 9 - 4*ph;
+    const op = ph<0.85 ? 0.95 : 0.95*(1-ph)/0.15;
+    if(y < 1255) dh += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="#dbeefb" stroke="#8fbcd9" stroke-width="3" opacity="${op.toFixed(2)}"/>`;
+  }
+  drops.innerHTML = dh;
+  // ripples
+  const rip = document.getElementById('ripples');
+  let rh='';
+  for(let i=0;i<2;i++){
+    const ph = ((2*t/T)+i/2)%1;
+    const rx = 50+190*ph, ry = 9+30*ph, op = 0.65*(1-ph);
+    rh += `<ellipse cx="465" cy="1238" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="none" stroke="#8fbcd9" stroke-width="4" opacity="${op.toFixed(2)}"/>`;
+  }
+  rip.innerHTML = rh;
+}
+window.seek = seek;
+seek(0);
+</script>

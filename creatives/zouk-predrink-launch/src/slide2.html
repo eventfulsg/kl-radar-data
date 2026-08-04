@@ -1,0 +1,132 @@
+<meta charset="utf-8">
+<style>
+  @font-face { font-family:'Baloo'; src:url('Baloo2-ExtraBold.ttf'); font-weight:800; }
+  @font-face { font-family:'Baloo'; src:url('Baloo2-Bold.ttf'); font-weight:700; }
+  html,body{margin:0;padding:0;background:#fff;}
+  #stage{width:1080px;height:1350px;}
+  svg{display:block;}
+  text{font-family:'Baloo',sans-serif;}
+</style>
+<div id="stage">
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#dcedf8"/>
+      <stop offset="0.5" stop-color="#f4fafe"/>
+      <stop offset="1" stop-color="#cfe4f2"/>
+    </linearGradient>
+    <linearGradient id="drinkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf6ff"/>
+      <stop offset="1" stop-color="#bcd9ee"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1350" fill="#ffffff"/>
+
+  <!-- headline -->
+  <text x="540" y="180" font-size="150" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="2">ZOUK'S</text>
+  <text x="540" y="330" font-size="132" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="1">PRE-DRINK</text>
+  <text x="540" y="470" font-size="132" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="4">PACKAGE</text>
+
+  <!-- ============ PRODUCT SHOT ============ -->
+  <!-- bottle (upright, centered-right) -->
+  <g transform="translate(120 490) scale(0.78)">
+    <g stroke="#232C7C" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M 455 120 L 455 20 Q 455 6 469 6 L 611 6 Q 625 6 625 20 L 625 120
+               Q 625 150 648 172 Q 672 196 672 236 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560
+               L 408 236 Q 408 196 432 172 Q 455 150 455 120 Z" fill="url(#glassGrad)"/>
+      <path d="M 408 300 L 672 300 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560 Z" fill="#dff0fb" stroke="none"/>
+      <path d="M 449 96 L 631 96" fill="none"/>
+      <rect x="420" y="290" width="240" height="220" rx="24" fill="#ffffff"/>
+      <path d="M 455 120 L 455 20 Q 455 6 469 6 L 611 6 Q 625 6 625 20 L 625 120
+               Q 625 150 648 172 Q 672 196 672 236 L 672 560 Q 672 590 642 590 L 438 590 Q 408 590 408 560
+               L 408 236 Q 408 196 432 172 Q 455 150 455 120 Z" fill="none"/>
+    </g>
+    <text x="540" y="360" font-size="56" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="4">ZOUK</text>
+    <text x="540" y="424" font-size="62" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="5">VODKA</text>
+    <text x="540" y="462" font-size="24" font-weight="700" fill="#5a63b8" text-anchor="middle">PRE-DRINK RESERVE</text>
+  </g>
+
+  <!-- two highball glasses -->
+  <g stroke="#232C7C" stroke-width="10" stroke-linejoin="round">
+    <g transform="translate(655 690)">
+      <path d="M 0 0 L 16 260 Q 18 282 40 282 L 120 282 Q 142 282 144 260 L 160 0 Z" fill="url(#glassGrad)"/>
+      <path d="M 10 60 L 22 250 Q 24 266 42 266 L 118 266 Q 136 266 138 250 L 150 60 Z" fill="url(#drinkGrad)" stroke="none"/>
+      <circle cx="55" cy="120" r="9" fill="#ffffff" stroke="none"/>
+      <circle cx="100" cy="170" r="7" fill="#ffffff" stroke="none"/>
+      <circle cx="70" cy="215" r="8" fill="#ffffff" stroke="none"/>
+      <!-- lime wedge -->
+      <path d="M 118 -8 A 34 34 0 0 0 152 30 L 152 -8 Z" fill="#bde3b0" stroke="#232C7C" stroke-width="8"/>
+      <!-- straw -->
+      <path d="M 40 30 L 78 -70" fill="none" stroke-width="14" stroke="#232C7C"/>
+    </g>
+    <g transform="translate(840 720) scale(0.9)">
+      <path d="M 0 0 L 16 260 Q 18 282 40 282 L 120 282 Q 142 282 144 260 L 160 0 Z" fill="url(#glassGrad)"/>
+      <path d="M 10 60 L 22 250 Q 24 266 42 266 L 118 266 Q 136 266 138 250 L 150 60 Z" fill="url(#drinkGrad)" stroke="none"/>
+      <circle cx="60" cy="130" r="8" fill="#ffffff" stroke="none"/>
+      <circle cx="95" cy="190" r="7" fill="#ffffff" stroke="none"/>
+    </g>
+  </g>
+
+  <!-- ice bucket hint: three cubes -->
+  <g stroke="#232C7C" stroke-width="9" stroke-linejoin="round" fill="#eaf6ff">
+    <rect x="560" y="1010" width="64" height="64" rx="12" transform="rotate(-12 592 1042)"/>
+    <rect x="620" y="1030" width="56" height="56" rx="12" transform="rotate(14 648 1058)"/>
+  </g>
+
+  <!-- ============ MASCOT standing, proud ============ -->
+  <g transform="translate(30 360) scale(0.72)" stroke="#232C7C" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="#ffffff">
+    <!-- legs -->
+    <rect x="285" y="1080" width="54" height="150" rx="27"/>
+    <rect x="360" y="1080" width="54" height="150" rx="27"/>
+    <!-- shoes -->
+    <path d="M 330 1228 q 18 0 18 22 q 0 18 -22 18 l -78 0 q -18 0 -14 -20 l 4 -20 Z" fill="#232C7C" stroke="#232C7C"/>
+    <path d="M 372 1228 q -18 0 -18 22 q 0 18 22 18 l 78 0 q 18 0 14 -20 l -4 -20 Z" fill="#232C7C" stroke="#232C7C"/>
+    <!-- torso -->
+    <path d="M 262 930 Q 258 880 310 876 L 390 876 Q 442 880 438 930 L 428 1070 Q 426 1102 390 1102 L 310 1102 Q 274 1102 272 1070 Z"/>
+    <!-- arm left: hand on hip -->
+    <path d="M 272 930 Q 218 970 240 1020 Q 252 1044 282 1036" fill="none"/>
+    <!-- arm right: raised fist -->
+    <path d="M 430 930 Q 480 900 496 856" fill="none"/>
+    <circle cx="502" cy="842" r="22"/>
+    <!-- head -->
+    <circle cx="350" cy="800" r="82"/>
+    <!-- hair quiff -->
+    <path d="M 296 736 Q 274 696 316 704 Q 308 676 344 694 Q 352 672 376 700 Q 410 708 418 738" fill="#232C7C" stroke="#232C7C"/>
+    <!-- face: eyes + big smile -->
+    <circle cx="326" cy="796" r="9" fill="#232C7C" stroke="none"/>
+    <circle cx="380" cy="796" r="9" fill="#232C7C" stroke="none"/>
+    <path d="M 316 828 Q 352 862 392 824" fill="none" stroke-width="10"/>
+  </g>
+
+  <!-- price splash -->
+  <g transform="translate(370 1000)">
+    <text x="0" y="80" font-size="104" font-weight="800" fill="#232C7C">$88</text>
+    <text x="4" y="130" font-size="32" font-weight="700" fill="#5a63b8">PER PACK</text>
+  </g>
+
+  <!-- inclusions pills -->
+  <g font-weight="700" text-anchor="middle">
+    <rect x="90" y="1120" width="10" height="0" fill="none"/>
+    <g>
+      <rect x="545" y="1120" width="250" height="58" rx="29" fill="#ffffff" stroke="#232C7C" stroke-width="6"/>
+      <text x="670" y="1160" font-size="30" fill="#232C7C">VODKA 700ML</text>
+    </g>
+    <g>
+      <rect x="815" y="1120" width="190" height="58" rx="29" fill="#ffffff" stroke="#232C7C" stroke-width="6"/>
+      <text x="910" y="1160" font-size="30" fill="#232C7C">MIXERS</text>
+    </g>
+    <g>
+      <rect x="545" y="1195" width="220" height="58" rx="29" fill="#ffffff" stroke="#232C7C" stroke-width="6"/>
+      <text x="655" y="1235" font-size="30" fill="#232C7C">ICE + SETUP</text>
+    </g>
+    <g>
+      <rect x="785" y="1195" width="250" height="58" rx="29" fill="#ffffff" stroke="#232C7C" stroke-width="6"/>
+      <text x="910" y="1235" font-size="30" fill="#232C7C">EXPRESS ENTRY</text>
+    </g>
+  </g>
+
+  <!-- CTA -->
+  <text x="540" y="1322" font-size="48" font-weight="800" fill="#232C7C" text-anchor="middle" letter-spacing="3">GRAB YOURS — LINK IN BIO</text>
+</svg>
+</div>
