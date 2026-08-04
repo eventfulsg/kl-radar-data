@@ -9,9 +9,13 @@ offer card.
   trending sound in the IG composer).
 - `slide2-image.png` — static offer card.
 
-Placeholders to confirm before posting: price (`$88`), inclusions
-(vodka 700ml / mixers / ice + setup / express entry), caption text in the
-fake feed strip.
+Palette: Eventful orange `#F26F21` on cream `#F3EADB`, accents `#C93D6E`.
+All facts sourced from the drop-002 mockup (eventful-drops repo,
+`preview-478585c2da19/drop-002.html`): $129 (worth ~$268), 2× Sorry For:
+bottles (Sour Plum Vodka / Chrysanthemum Peach Gin), 4× Zouk entries,
+party cups, shot glasses for the first 10 orders, only 10 packs, free
+next-day delivery, 18+. Bottle imagery is the real product photography
+(`bottle_open.png` cutout from `drop004-bottles.jpg`).
 
 ## Rebuilding
 
