@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>sides. — pick one. defend it.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%2250%22 fill=%22%23FF3D5A%22/><rect y=%2250%22 width=%22100%22 height=%2250%22 fill=%22%2323C4FF%22/></svg>">
+<style>
+  :root{
+    --bg:#0E0E11; --panel:#1A1A20; --line:rgba(255,255,255,.1);
+    --red:#FF3D5A; --blue:#23C4FF; --gold:#FFC542;
+    --txt:#F7F6F3; --dim:rgba(247,246,243,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
+  .disp{font-family:'Archivo Black','Archivo',system-ui,sans-serif;font-weight:400}
+
+  .stage{height:100dvh;display:flex;align-items:center;justify-content:center}
+  .phone{position:relative;width:100%;height:100dvh;background:var(--bg);overflow:hidden}
+  @media (min-width:560px){
+    body{background:linear-gradient(160deg,#26131a 0%,#0E0E11 45%,#0f1f28 100%)}
+    .phone{width:min(430px,100vw);height:min(890px,96dvh);border-radius:36px;
+      box-shadow:0 30px 80px rgba(0,0,0,.65),0 0 0 10px #191920,0 0 0 12px rgba(255,255,255,.06)}
+  }
+  .screen{position:absolute;inset:0;display:none;flex-direction:column}
+  .screen.live{display:flex;animation:in .3s ease}
+  @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* ============ INTRO ============ */
+  #intro{padding:calc(26px + env(safe-area-inset-top)) 26px calc(26px + env(safe-area-inset-bottom));overflow-y:auto}
+  .mark{font-size:44px;letter-spacing:-.02em;line-height:1}
+  .mark .r{color:var(--red)}.mark .b{color:var(--blue)}
+  .tagline{font-size:15px;color:var(--dim);margin-top:6px;font-weight:600}
+  .liverow{margin-top:26px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+  .pulse{width:10px;height:10px;border-radius:50%;background:#3ddc84;animation:pu 1.6s ease infinite;flex:none}
+  @keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(61,220,132,.5)}50%{box-shadow:0 0 0 9px rgba(61,220,132,0)}}
+  .liverow b{font-variant-numeric:tabular-nums}
+  .daybox{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .daybox .d{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--dim)}
+  .daybox h2{font-size:24px;margin-top:4px;letter-spacing:-.01em}
+  .daybox p{font-size:14px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .startbtn{margin-top:auto;width:100%;border:0;cursor:pointer;border-radius:20px;padding:0;overflow:hidden;
+    font-family:'Archivo Black',sans-serif;font-size:20px;color:#fff;letter-spacing:.01em;transition:transform .12s}
+  .startbtn:active{transform:scale(.97)}
+  .startbtn .half{padding:15px;display:block}
+  .startbtn .h1{background:var(--red)}
+  .startbtn .h2{background:var(--blue)}
+  .introfoot{text-align:center;font-size:12.5px;color:var(--dim);margin-top:14px;line-height:1.6}
+  .introfoot b{color:var(--txt)}
+
+  /* ============ VOTE ============ */
+  #vote{padding-top:calc(14px + env(safe-area-inset-top))}
+  .dots{display:flex;gap:5px;justify-content:center;padding:0 20px}
+  .dot{width:22px;height:5px;border-radius:99px;background:rgba(255,255,255,.16)}
+  .dot.on{background:#fff}
+  .dot.won-a{background:var(--red)}.dot.won-b{background:var(--blue)}
+  .qhead{text-align:center;padding:16px 24px 12px}
+  .qcat{font-size:26px}
+  .qtext{font-size:20px;letter-spacing:-.01em;margin-top:6px;text-wrap:balance}
+  .split{flex:1;display:flex;flex-direction:column;position:relative;margin:4px 14px calc(14px + env(safe-area-inset-bottom));border-radius:24px;overflow:hidden}
+  .side{position:relative;flex:1;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    padding:20px 26px;transition:flex-grow .8s cubic-bezier(.5,0,.2,1),opacity .4s;overflow:hidden}
+  .side.a{background:linear-gradient(150deg,#ff5470,var(--red) 55%,#d92040)}
+  .side.b{background:linear-gradient(150deg,#4fd2ff,var(--blue) 55%,#0d9fd8)}
+  .side .opt{font-family:'Archivo Black',sans-serif;font-size:24px;line-height:1.2;color:#fff;text-align:center;
+    text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.25);max-width:20ch}
+  .side .pct{position:absolute;top:12px;right:16px;font-family:'Archivo Black',sans-serif;font-size:34px;color:#fff;
+    opacity:0;transition:opacity .3s;text-shadow:0 2px 10px rgba(0,0,0,.3);font-variant-numeric:tabular-nums}
+  .side .votes{position:absolute;bottom:10px;right:16px;font-size:12px;font-weight:700;color:rgba(255,255,255,.85);
+    opacity:0;transition:opacity .3s;font-variant-numeric:tabular-nums}
+  .side.lost{opacity:.62}
+  .revealed .side .pct,.revealed .side .votes{opacity:1}
+  .revealed .side{cursor:default}
+  .vsbar{position:relative;height:0;z-index:3}
+  .vs{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);background:#0E0E11;border:2px solid rgba(255,255,255,.25);
+    color:#fff;font-family:'Archivo Black',sans-serif;font-size:14px;border-radius:99px;padding:8px 14px;letter-spacing:.05em}
+  .verdict{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);z-index:4;opacity:0;pointer-events:none;
+    background:#0E0E11;border-radius:18px;padding:12px 20px;text-align:center;border:1.5px solid var(--line);
+    box-shadow:0 14px 40px rgba(0,0,0,.5);transition:all .35s cubic-bezier(.2,1.4,.4,1);white-space:nowrap}
+  .verdict.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .verdict .vb{font-family:'Archivo Black',sans-serif;font-size:17px}
+  .verdict .vs2{font-size:12px;color:var(--dim);font-weight:600;margin-top:2px}
+  .verdict.gold{border-color:var(--gold);box-shadow:0 0 34px rgba(255,197,66,.35)}
+  .verdict.gold .vb{color:var(--gold)}
+  .nexthint{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:5;
+    font-size:13px;font-weight:700;background:#fff;color:#0E0E11;border-radius:99px;padding:9px 18px;opacity:0;transition:opacity .3s;pointer-events:none;
+    animation:bob 1.4s ease-in-out infinite}
+  .nexthint.show{opacity:1}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+
+  /* ============ RESULTS ============ */
+  #results{padding:calc(20px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));overflow-y:auto;scrollbar-width:none}
+  #results::-webkit-scrollbar{display:none}
+  .rl{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--dim)}
+  .rh{font-size:30px;letter-spacing:-.01em;margin-top:4px}
+  .sharecard{margin-top:16px;border-radius:22px;padding:20px;background:linear-gradient(150deg,#1d1d25,#15151b);
+    border:1px solid var(--line);position:relative;overflow:hidden}
+  .sharecard::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;
+    background:linear-gradient(90deg,var(--red) 0 50%,var(--blue) 50% 100%)}
+  .sc-mark{font-size:20px}
+  .sc-day{font-size:12px;color:var(--dim);font-weight:700;letter-spacing:.1em;margin-top:2px}
+  .grid{display:flex;gap:7px;margin-top:14px}
+  .cell{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;position:relative}
+  .cell.a{background:var(--red)}.cell.b{background:var(--blue)}
+  .cell .star{position:absolute;top:-7px;right:-7px;font-size:14px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+  .mavrow{margin-top:16px}
+  .mavlabels{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--dim)}
+  .mavtrack{height:12px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:6px;overflow:hidden}
+  .mavfill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .mavline{margin-top:10px;font-size:15px}
+  .mavline b{font-family:'Archivo Black',sans-serif;color:var(--gold)}
+  .bigshare{margin-top:16px;width:100%;border:0;cursor:pointer;border-radius:18px;padding:16px;
+    font-family:'Archivo Black',sans-serif;font-size:17px;color:#fff;background:linear-gradient(120deg,var(--red),#c937b4 55%,var(--blue));
+    box-shadow:0 10px 30px rgba(255,61,90,.3);transition:transform .12s}
+  .bigshare:active{transform:scale(.97)}
+  .sharenote{text-align:center;font-size:12px;color:var(--dim);margin-top:8px}
+  .sharenote b{color:var(--txt)}
+  .sect{margin-top:22px}
+  .sect h3{font-size:14px;letter-spacing:.1em;color:var(--dim);font-weight:700}
+  .friend{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:8px}
+  .fava{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+  .friend .fn{font-weight:700;font-size:14.5px}
+  .friend .fs{font-size:12.5px;color:var(--dim)}
+  .friend .fscore{margin-left:auto;font-family:'Archivo Black',sans-serif;font-size:15px}
+  .friend .poke{margin-left:auto;font-family:inherit;font-weight:700;font-size:12.5px;border:1.5px solid var(--line);border-radius:99px;
+    background:none;color:var(--txt);padding:7px 13px;cursor:pointer}
+  .submitbox{display:flex;gap:8px;margin-top:10px}
+  .submitbox input{flex:1;font-family:inherit;font-size:14px;font-weight:600;background:var(--panel);border:1.5px solid var(--line);
+    border-radius:14px;padding:13px 15px;color:var(--txt);outline:none;min-width:0}
+  .submitbox input:focus{border-color:var(--blue)}
+  .submitbox button{font-family:'Archivo Black',sans-serif;font-size:14px;border:0;border-radius:14px;background:#fff;color:#0E0E11;padding:0 18px;cursor:pointer}
+  .subnote{font-size:12px;color:var(--dim);margin-top:7px;line-height:1.5}
+  .subnote b{color:var(--gold)}
+  .tmr{margin-top:20px;text-align:center;font-size:13px;color:var(--dim)}
+  .tmr b{color:var(--txt);font-variant-numeric:tabular-nums}
+  .replay{display:block;margin:14px auto 0;font-family:inherit;font-size:13px;font-weight:700;color:var(--dim);background:none;border:0;cursor:pointer;text-decoration:underline dotted}
+
+  .toast{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);z-index:9;background:#fff;color:#0E0E11;
+    font-size:13.5px;font-weight:800;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:88%}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone">
+
+    <!-- INTRO -->
+    <div class="screen live" id="intro">
+      <div class="mark disp">sides<span class="r">.</span></div>
+      <div class="tagline">pick one. defend it.</div>
+
+      <div class="liverow"><div class="pulse"></div><div style="font-size:14px"><b id="livecount">4,281</b> people are picking sides right now</div></div>
+
+      <div class="daybox">
+        <div class="d">DAY 47 · TODAY'S SEVEN</div>
+        <h2 class="disp">The world is split.<br>Where do you stand?</h2>
+        <p>7 questions everyone answers today. Tap your side, then see the live world vote — and find out if you're normal or a menace.</p>
+      </div>
+
+      <button class="startbtn" onclick="startRun()">
+        <span class="half h1 disp">PICK YOUR SIDES</span>
+        <span class="half h2 disp" style="font-size:13px;letter-spacing:.1em">TAKES ~90 SECONDS · NO ACCOUNT NEEDED</span>
+      </button>
+      <div class="introfoot">Then send your card to the group chat —<br><b>they play your link instantly, no download.</b></div>
+    </div>
+
+    <!-- VOTE -->
+    <div class="screen" id="vote">
+      <div class="dots" id="dots"></div>
+      <div class="qhead">
+        <div class="qcat" id="qcat"></div>
+        <div class="qtext disp" id="qtext"></div>
+      </div>
+      <div class="split" id="split">
+        <button class="side a" id="sideA" onclick="pick(0)"><span class="opt" id="optA"></span><span class="pct" id="pctA"></span><span class="votes" id="votesA"></span></button>
+        <div class="vsbar"><div class="vs">OR</div></div>
+        <button class="side b" id="sideB" onclick="pick(1)"><span class="opt" id="optB"></span><span class="pct" id="pctB"></span><span class="votes" id="votesB"></span></button>
+        <div class="verdict" id="verdict"><div class="vb disp" id="verdictBig"></div><div class="vs2" id="verdictSub"></div></div>
+      </div>
+      <div class="nexthint" id="nexthint">tap for the next one ↓</div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="screen" id="results">
+      <div class="rl">DAY 47 · DONE IN <span id="rtime">—</span></div>
+      <div class="rh disp">Your card is ready.</div>
+
+      <div class="sharecard">
+        <div class="sc-mark disp">sides<span style="color:var(--red)">.</span></div>
+        <div class="sc-day">DAY 47 · <span id="scmav">MAVERICK 0%</span></div>
+        <div class="grid" id="grid"></div>
+        <div class="mavrow">
+          <div class="mavlabels"><span>🤝 with the crowd</span><span>agent of chaos 🃏</span></div>
+          <div class="mavtrack"><div class="mavfill" id="mavfill"></div></div>
+          <div class="mavline">You sided with the minority <b id="mavn">0</b> of 7 times — <b id="mavtitle">…</b></div>
+        </div>
+      </div>
+
+      <button class="bigshare" onclick="shareCard()">⚔️ CHALLENGE THE GROUP CHAT</button>
+      <div class="sharenote">They tap your link → play the same 7 in the browser → <b>see exactly where you disagree.</b> No app needed.</div>
+
+      <div class="sect">
+        <h3>YOUR PEOPLE TODAY</h3>
+        <div class="friend"><div class="fava">🧑‍💻</div><div><div class="fn">Mei</div><div class="fs">agrees with you 6/7 — basically twins</div></div><div class="fscore" style="color:#3ddc84">6/7 🤝</div></div>
+        <div class="friend"><div class="fava">🧢</div><div><div class="fn">Aiman</div><div class="fs">agrees 2/7 — he thinks you're wrong about popcorn</div></div><div class="fscore" style="color:var(--red)">2/7 😤</div></div>
+        <div class="friend"><div class="fava">🌙</div><div><div class="fn">Raj</div><div class="fs">hasn't picked his sides yet</div></div><button class="poke" onclick="toast('Poked — Raj has been shamed ✅')">Poke</button></div>
+      </div>
+
+      <div class="sect">
+        <h3>WRITE TOMORROW'S QUESTION</h3>
+        <div class="submitbox">
+          <input id="subq" placeholder="e.g. Teh tarik: kurang manis or full sugar?" maxlength="90">
+          <button class="disp" onclick="submitQ()">DROP IT</button>
+        </div>
+        <div class="subnote">If the world votes yours into the seven, it drops <b>to every player tomorrow</b> with your name on it.</div>
+      </div>
+
+      <div class="tmr">Tomorrow's seven in <b id="cd">—</b></div>
+      <button class="replay" onclick="resetDemo()">↺ replay demo</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+// ---------------- today's seven (mock) ----------------
+const QS = [
+  {e:'🍿', q:'Cinema popcorn', a:'Sweet, obviously', b:'Salty, like an adult', pa:64, total:8412},
+  {e:'💸', q:'Pick your life', a:'RM12k/month, 6-day weeks', b:'RM6k/month, 4-day weeks', pa:41, total:9204},
+  {e:'🧋', q:'Bubble tea', a:'Pearls or nothing', b:'Pearls are wet gummy bears', pa:71, total:7818},
+  {e:'❄️', q:'Sleep setup', a:'Aircon 16°C + thick blanket', b:'Fan only, free the toes', pa:58, total:8931},
+  {e:'📱', q:'Choose your pain', a:'Lose your phone for a month', b:'Hand-wash dishes forever', pa:33, total:7402},
+  {e:'🌶️', q:'Sambal philosophy', a:'Spicier = better. Always.', b:'Flavour first, fire second', pa:47, total:8177},
+  {e:'⏰', q:'For the rest of your life', a:'30 min early to everything', b:'10 min late to everything', pa:76, total:9650},
+];
+const MAV_TITLES = [[1,'the people\'s champion'],[3,'mostly normal (suspicious)'],[5,'certified contrarian'],[7,'agent of chaos']];
+
+let qi = 0, picks = [], revealed = false, t0 = 0;
+const $ = id => document.getElementById(id);
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toast._x); toast._x=setTimeout(()=>t.classList.remove('show'),1800); }
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('live')); $(id).classList.add('live'); }
+function fmt(n){ return n.toLocaleString('en-US'); }
+
+// live counter tick on intro
+let lc = 4281;
+setInterval(()=>{ lc += [1,2,0,3,1,2][lc%6]; const el=$('livecount'); if(el) el.textContent = fmt(lc); }, 1400);
+
+function startRun(){
+  qi = 0; picks = []; t0 = Date.now();
+  show('vote'); renderQ();
+}
+
+function renderQ(){
+  revealed = false;
+  const q = QS[qi];
+  $('dots').innerHTML = QS.map((_,i)=>{
+    const p = picks[i];
+    return `<div class="dot ${i===qi?'on':''} ${p?(p.side===0?'won-a':'won-b'):''}"></div>`;
+  }).join('');
+  $('qcat').textContent = q.e;
+  $('qtext').textContent = q.q;
+  $('optA').textContent = q.a; $('optB').textContent = q.b;
+  $('pctA').textContent = ''; $('pctB').textContent = '';
+  $('votesA').textContent = ''; $('votesB').textContent = '';
+  const A=$('sideA'), B=$('sideB');
+  A.style.flexGrow = 1; B.style.flexGrow = 1;
+  A.classList.remove('lost'); B.classList.remove('lost');
+  $('split').classList.remove('revealed');
+  $('verdict').classList.remove('show','gold');
+  $('nexthint').classList.remove('show');
+}
+
+function pick(side){
+  if(revealed) return;
+  revealed = true;
+  const q = QS[qi];
+  const myPct = side===0 ? q.pa : 100-q.pa;
+  const minority = myPct < 50;
+  picks.push({side, myPct, minority});
+
+  const A=$('sideA'), B=$('sideB');
+  $('split').classList.add('revealed');
+  A.style.flexGrow = Math.max(q.pa,18)/100*2;
+  B.style.flexGrow = Math.max(100-q.pa,18)/100*2;
+  (side===0?B:A).classList.add('lost');
+
+  // count-up: percentages + vote totals ticking = the slot machine
+  const steps = 22; let s = 0;
+  const iv = setInterval(()=>{
+    s++;
+    const f = s/steps, ease = 1-Math.pow(1-f,3);
+    $('pctA').textContent = Math.round(q.pa*ease)+'%';
+    $('pctB').textContent = Math.round((100-q.pa)*ease)+'%';
+    $('votesA').textContent = fmt(Math.round(q.total*q.pa/100*ease))+' votes';
+    $('votesB').textContent = fmt(Math.round(q.total*(100-q.pa)/100*ease))+' votes';
+    if(s>=steps){
+      clearInterval(iv);
+      const v=$('verdict');
+      if(minority){
+        v.classList.add('gold');
+        $('verdictBig').textContent = '🃏 MAVERICK';
+        $('verdictSub').textContent = 'only '+myPct+'% of the world is with you';
+      } else {
+        $('verdictBig').textContent = '🤝 '+myPct+'% AGREE';
+        $('verdictSub').textContent = fmt(Math.round(q.total*myPct/100))+' people picked your side';
+      }
+      v.classList.add('show');
+      setTimeout(()=>$('nexthint').classList.add('show'), 500);
+    }
+  }, 32);
+}
+
+// tap anywhere after reveal -> next
+$('vote').addEventListener('click', e=>{
+  if(!revealed) return;
+  if(e.target.closest('.side') && !$('nexthint').classList.contains('show')) return;
+  next();
+});
+function next(){
+  if(qi < QS.length-1){ qi++; renderQ(); }
+  else finish();
+}
+
+function finish(){
+  const secs = Math.max(1, Math.round((Date.now()-t0)/1000));
+  $('rtime').textContent = Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');
+  $('grid').innerHTML = picks.map((p,i)=>
+    `<div class="cell ${p.side===0?'a':'b'}">${QS[i].e}${p.minority?'<span class="star">⭐</span>':''}</div>`).join('');
+  const mav = picks.filter(p=>p.minority).length;
+  $('mavn').textContent = mav;
+  $('scmav').textContent = 'MAVERICK '+Math.round(mav/7*100)+'%';
+  $('mavtitle').textContent = MAV_TITLES.find(t=>mav<=t[0])[1];
+  show('results');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ $('mavfill').style.width = Math.max(6,Math.round(mav/7*100))+'%'; }));
+  tickCountdown();
+}
+
+function shareCard(){
+  const mav = picks.filter(p=>p.minority).length;
+  const grid = picks.map(p=>p.side===0?'🟥':'🟦').join('') ;
+  const stars = picks.map(p=>p.minority?'⭐':'▪️').join('');
+  const txt = 'sides. day 47\n'+grid+'\n'+stars+'\nmaverick '+Math.round(mav/7*100)+'% — '
+    +MAV_TITLES.find(t=>mav<=t[0])[1]+'\n\ndo we agree? pick your sides → sides.app/d47/xk92';
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); }
+  else navigator.clipboard.writeText(txt).then(()=>toast('Card copied — drop it in the group chat ⚔️'));
+}
+
+function submitQ(){
+  const v = $('subq').value.trim();
+  if(!v){ toast('Write a question first 🙂'); return; }
+  $('subq').value = '';
+  toast('Submitted — the world votes tonight 🗳️');
+}
+
+function tickCountdown(){
+  clearInterval(tickCountdown._t);
+  const upd = ()=>{
+    const now = new Date(); const nx = new Date(now); nx.setHours(24,0,0,0);
+    let d = Math.floor((nx-now)/1000);
+    const el = $('cd'); if(el) el.textContent = Math.floor(d/3600)+'h '+String(Math.floor(d%3600/60)).padStart(2,'0')+'m';
+  };
+  upd(); tickCountdown._t = setInterval(upd, 30000);
+}
+
+function resetDemo(){ clearInterval(tickCountdown._t); show('intro'); }
+
+// keyboard: 1/2 to vote, enter/space to advance
+document.addEventListener('keydown', e=>{
+  if(!$('vote').classList.contains('live')) return;
+  if(e.key==='1') pick(0);
+  if(e.key==='2') pick(1);
+  if((e.key==='Enter'||e.key===' ') && revealed){ e.preventDefault(); next(); }
+});
+</script>
+</body>
+</html>

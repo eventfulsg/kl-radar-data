@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>dose. — your daily scroll, done right</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23FF5C58%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22>💊</text></svg>">
+<style>
+  :root{
+    --bg:#0D0B10; --card:#17141D; --line:rgba(255,255,255,.09);
+    --coral:#FF5C58; --violet:#8C6BFF; --gold:#FFC542; --mint:#4ADEB8;
+    --txt:#F4F1FA; --dim:rgba(244,241,250,.6);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
+
+  .stage{height:100dvh;display:flex;align-items:center;justify-content:center}
+  .phone{position:relative;width:100%;height:100dvh;background:var(--bg);overflow:hidden}
+  @media (min-width:560px){
+    body{background:radial-gradient(1100px 700px at 50% -10%, #241a33 0%, #0D0B10 60%)}
+    .phone{width:min(430px,100vw);height:min(890px,96dvh);border-radius:36px;
+      box-shadow:0 30px 80px rgba(0,0,0,.65),0 0 0 10px #1c1723,0 0 0 12px rgba(255,255,255,.06)}
+  }
+
+  /* ================= START SCREEN ================= */
+  .start{position:absolute;inset:0;display:flex;flex-direction:column;padding:calc(22px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));overflow-y:auto;z-index:10;background:var(--bg)}
+  .wordmark{font-size:34px;font-weight:900;letter-spacing:-.04em}
+  .wordmark i{font-style:normal;color:var(--coral)}
+  .startline{font-size:14px;color:var(--dim);margin-top:2px}
+  .streakcard{margin-top:22px;background:linear-gradient(135deg,rgba(255,92,88,.16),rgba(140,107,255,.14));
+    border:1px solid var(--line);border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+  .flame{font-size:34px;filter:drop-shadow(0 0 12px rgba(255,146,60,.5));animation:flick 1.4s ease-in-out infinite}
+  @keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.08) rotate(2deg)}}
+  .streakcard b{font-size:19px;display:block}
+  .streakcard span{font-size:13px;color:var(--dim)}
+  .sec{margin-top:26px;font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--dim)}
+  .moods{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .mood{font-family:inherit;font-size:14.5px;font-weight:700;padding:10px 16px;border-radius:999px;cursor:pointer;
+    background:var(--card);color:var(--txt);border:1.5px solid var(--line);transition:all .15s}
+  .mood.on{border-color:var(--coral);background:rgba(255,92,88,.14);box-shadow:0 0 0 3px rgba(255,92,88,.12)}
+  .dropmeta{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px 18px}
+  .dropmeta .row{display:flex;justify-content:space-between;font-size:14.5px;padding:5px 0}
+  .dropmeta .row span:first-child{color:var(--dim)}
+  .dropmeta b{font-weight:800}
+  .go{margin-top:auto;padding-top:26px}
+  .gobtn{width:100%;font-family:inherit;font-size:18px;font-weight:900;letter-spacing:-.01em;color:#fff;border:0;cursor:pointer;
+    background:linear-gradient(120deg,var(--coral),var(--violet));border-radius:999px;padding:18px;
+    box-shadow:0 10px 34px rgba(255,92,88,.35);transition:transform .12s}
+  .gobtn:active{transform:scale(.97)}
+  .manifesto{font-size:12.5px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6}
+  .manifesto b{color:var(--txt)}
+
+  /* ================= FEED ================= */
+  .feedwrap{position:absolute;inset:0;display:none}
+  .feedwrap.live{display:block}
+  .segbar{position:absolute;top:calc(10px + env(safe-area-inset-top));left:12px;right:12px;z-index:6;display:flex;gap:4px}
+  .seg{flex:1;height:4px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+  .seg i{display:block;height:100%;width:0;background:#fff;border-radius:99px;transition:width .3s}
+  .seg.done i{width:100%}
+  .seg.rare i{background:var(--gold)}
+  .feedtop{position:absolute;top:calc(24px + env(safe-area-inset-top));left:14px;right:14px;z-index:6;display:flex;align-items:center}
+  .feedbrand{font-size:18px;font-weight:900;letter-spacing:-.03em;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+  .feedbrand i{font-style:normal;color:var(--coral)}
+  .remain{margin-left:auto;font-size:12.5px;font-weight:800;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);
+    border-radius:99px;padding:6px 13px}
+  .feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none}
+  .feed::-webkit-scrollbar{display:none}
+  .card{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden}
+
+  /* animated gradient backdrops per mood */
+  .bgfx{position:absolute;inset:0;background-size:300% 300%;animation:drift 9s ease-in-out infinite}
+  @keyframes drift{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}
+  .m-learn .bgfx{background-image:linear-gradient(130deg,#123055,#0d5c74,#123055,#3a1d63)}
+  .m-laugh .bgfx{background-image:linear-gradient(130deg,#7a2f14,#a3541b,#84202f,#5c1440)}
+  .m-art   .bgfx{background-image:linear-gradient(130deg,#3a1d63,#7a2372,#28407a,#1c1440)}
+  .m-move  .bgfx{background-image:linear-gradient(130deg,#0d4f3c,#136a58,#0d3550,#123f22)}
+  .card.rare .bgfx{background-image:linear-gradient(130deg,#6b4a00,#a67c00,#7a5500,#3d2c00)}
+  .card.rare::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,235,170,.22) 48%,transparent 62%);
+    background-size:250% 100%;animation:shimmer 2.6s linear infinite;pointer-events:none}
+  @keyframes shimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
+  .noise{position:absolute;inset:0;opacity:.5;background:
+    radial-gradient(500px 380px at 78% 18%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(420px 420px at 15% 85%, rgba(0,0,0,.45), transparent 65%)}
+  .scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;
+    filter:drop-shadow(0 14px 30px rgba(0,0,0,.45))}
+  .scene .main{animation:bob 3.2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+  .orbit{position:absolute;font-size:34px;opacity:.9;animation:orb 5.5s ease-in-out infinite}
+  .orbit.o2{animation-delay:-2.7s;font-size:26px}
+  @keyframes orb{0%,100%{transform:translate(0,0) rotate(-8deg)}50%{transform:translate(14px,-26px) rotate(10deg)}}
+  .shade{position:absolute;inset:0;background:
+    linear-gradient(to bottom, rgba(0,0,0,.5) 0%, transparent 20%),
+    linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.28) 32%, transparent 55%)}
+
+  .rareflag{position:absolute;top:calc(74px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:5;
+    font-size:12px;font-weight:900;letter-spacing:.14em;color:#3d2c00;background:linear-gradient(120deg,#ffe9a8,var(--gold));
+    border-radius:99px;padding:7px 16px;box-shadow:0 6px 22px rgba(255,197,66,.45)}
+
+  .content{position:absolute;left:0;right:76px;bottom:0;z-index:4;padding:0 16px calc(22px + env(safe-area-inset-bottom))}
+  .crearow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .ava{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;
+    background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);flex:none}
+  .crea{font-weight:800;font-size:15.5px}
+  .crea span{display:block;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.65)}
+  .mtag{font-size:11px;font-weight:800;letter-spacing:.08em;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px)}
+  .cap{font-size:15.5px;line-height:1.45;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+  .why{font-size:11.5px;color:rgba(255,255,255,.62);margin-top:8px}
+
+  .rail{position:absolute;right:8px;bottom:calc(26px + env(safe-area-inset-bottom));z-index:4;display:flex;flex-direction:column;gap:15px;align-items:center;width:60px}
+  .act{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:0;background:none;color:#fff;font-family:inherit}
+  .act .ico{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;font-size:21px;transition:transform .12s}
+  .act:active .ico{transform:scale(.84)}
+  .act .n{font-size:11px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+  .act.hearted .ico{background:rgba(255,92,88,.85)}
+  .act.kept .ico{background:rgba(140,107,255,.85)}
+
+  .burst{position:absolute;z-index:7;font-size:90px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);opacity:0;
+    animation:burst .7s ease forwards;filter:drop-shadow(0 4px 14px rgba(0,0,0,.4))}
+  @keyframes burst{15%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}60%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-95%) scale(.9)}}
+
+  /* ================= END CARD ================= */
+  .endcard{background:radial-gradient(600px 500px at 50% 0%,#2b1f3f 0%,#0D0B10 70%)}
+  .endin{position:relative;z-index:4;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:30px 28px calc(30px + env(safe-area-inset-bottom));gap:0}
+  .endbadge{font-size:64px;animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+  @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+  .endh{font-size:30px;font-weight:900;letter-spacing:-.03em;margin-top:10px}
+  .endsub{font-size:14.5px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .stats{display:flex;gap:10px;margin-top:22px;width:100%}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 6px}
+  .stat b{font-size:22px;font-weight:900;display:block}
+  .stat span{font-size:11.5px;color:var(--dim)}
+  .streakup{margin-top:18px;font-size:15px;font-weight:800;background:linear-gradient(120deg,rgba(255,92,88,.18),rgba(140,107,255,.18));
+    border:1px solid var(--line);border-radius:999px;padding:10px 20px}
+  .nextin{margin-top:20px;font-size:13px;color:var(--dim)}
+  .nextin b{color:var(--txt);font-variant-numeric:tabular-nums}
+  .endbtns{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:22px}
+  .ebtn{font-family:inherit;font-size:15.5px;font-weight:800;border-radius:999px;padding:14px;cursor:pointer;border:1.5px solid var(--line);background:var(--card);color:var(--txt)}
+  .ebtn.hero{background:linear-gradient(120deg,var(--coral),var(--violet));border:0;color:#fff}
+  .onemore{margin-top:16px;font-family:inherit;font-size:13px;font-weight:700;color:var(--dim);background:none;border:0;cursor:pointer;text-decoration:underline dotted}
+  .onemore.no{animation:nope .4s ease;color:var(--coral);text-decoration:none}
+  @keyframes nope{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+  .confetti{position:absolute;top:-12px;font-size:18px;z-index:8;pointer-events:none;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.2}}
+
+  .toast{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);z-index:9;background:#fff;color:#17141D;
+    font-size:13.5px;font-weight:800;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone">
+
+    <!-- START -->
+    <div class="start" id="start">
+      <div class="wordmark">dose<i>.</i></div>
+      <div class="startline">your daily scroll, done right</div>
+
+      <div class="streakcard">
+        <div class="flame">🔥</div>
+        <div><b id="streakN">12-day streak</b><span>you've closed the app on time 12 days straight</span></div>
+      </div>
+
+      <div class="sec">TODAY'S MIX — PICK YOUR MOODS</div>
+      <div class="moods" id="moods">
+        <button class="mood on" data-m="learn">🧠 Teach me</button>
+        <button class="mood on" data-m="laugh">😂 Make me laugh</button>
+        <button class="mood on" data-m="art">🎨 Art & vibes</button>
+        <button class="mood on" data-m="move">🏃 Get me moving</button>
+      </div>
+
+      <div class="dropmeta">
+        <div class="row"><span>Today's drop</span><b id="metaCount">15 moments</b></div>
+        <div class="row"><span>Time it takes</span><b id="metaTime">~4 min</b></div>
+        <div class="row"><span>Then</span><b>it ends. on purpose.</b></div>
+      </div>
+
+      <div class="go">
+        <button class="gobtn" id="goBtn" onclick="startDrop()">▶ Start today's drop</button>
+        <div class="manifesto"><b>No infinite scroll. No autoplay rabbit hole.</b><br>
+        One curated drop a day — every card earns its place, and when it's done, it's done.</div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div class="feedwrap" id="feedwrap">
+      <div class="segbar" id="segbar"></div>
+      <div class="feedtop">
+        <div class="feedbrand">dose<i>.</i></div>
+        <div class="remain" id="remain"></div>
+      </div>
+      <div class="feed" id="feed"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+// ---------------- mock content ----------------
+const MOOD_META = {
+  learn:{tag:'🧠 TEACH ME', cls:'m-learn'},
+  laugh:{tag:'😂 LAUGH',    cls:'m-laugh'},
+  art:  {tag:'🎨 ART & VIBES', cls:'m-art'},
+  move: {tag:'🏃 MOVE',     cls:'m-move'},
+};
+const POSTS = [
+  {m:'learn', ava:'🔭', u:'@astro.nadia', sub:'astrophysicist · 60s explainers', main:'🪐', orbits:['✨','🛰️'],
+   cap:'Saturn’s rings are disappearing — and you’re alive at exactly the right time to see them. Here’s the 60-second version.',
+   why:'In your drop because you finished 4 space explainers this week', likes:12400},
+  {m:'laugh', ava:'🐈', u:'@catlord.mo', sub:'comedy · 42s', main:'🐈‍⬛', orbits:['📦','💥'],
+   cap:'my cat discovered the printer today. RIP printer. RIP me. RIP the concept of paper.',
+   why:'Your friend Aiman hearted this', likes:89100},
+  {m:'art', ava:'🖌️', u:'@inkbyjules', sub:'ink artist · timelapse', main:'🐉', orbits:['🖋️','🌊'],
+   cap:'30 hours of stippling in 45 seconds. Every scale is dots. I need a nap and possibly a new wrist.',
+   why:'Because you kept 3 process videos', likes:45700},
+  {m:'move', ava:'🧗', u:'@wall.rat', sub:'climber · no gym needed', main:'🧗‍♀️', orbits:['💪','🪨'],
+   cap:'The doorframe workout: 5 moves, zero equipment, your landlord will hate it. Try move 3 right now — I’ll wait.',
+   why:'You said you want to move more in the mornings', likes:23300},
+  {m:'learn', ava:'🍜', u:'@wok.theory', sub:'food science · 90s', main:'🍜', orbits:['🔥','🥢'],
+   cap:'Why restaurant fried rice tastes different: it’s not MSG, it’s breath-of-the-wok. The physics of 400°C in your pan.',
+   why:'In your drop because you finished every food-science card', likes:67800},
+  {m:'laugh', ava:'🎭', u:'@dele.does.voices', sub:'impressions · 38s', main:'🎤', orbits:['😤','🎧'],
+   cap:'POV: every group project ever, performed as a one-man Shakespeare tragedy. Act III is the guy who vanished.',
+   why:'Trending in your city today', likes:120400},
+  {m:'art', ava:'📷', u:'@fog.and.neon', sub:'street photography', main:'🌃', orbits:['📷','💧'],
+   cap:'I shot the same alley every rainy night for a year. Watch it change. Frame 200 is my favourite thing I’ve ever made.',
+   why:'Matches your late-night saves', likes:38900},
+  {m:'move', ava:'💃', u:'@lin.footwork', sub:'dance · learn in 60s', main:'🕺', orbits:['🎵','✨'],
+   cap:'This 4-step footwork looks impossible at full speed. Half speed? You already know it. Let’s go.',
+   why:'You hearted 2 dance breakdowns yesterday', likes:54200},
+  {m:'learn', ava:'🧬', u:'@doc.amara', sub:'biologist · myth-busting', main:'🧬', orbits:['🔬','💤'],
+   cap:'“You only use 10% of your brain” is fully fake — here’s what the scans actually show, in one minute.',
+   why:'Follows the sleep explainer you finished', likes:99800},
+  {m:'art', ava:'🏆', u:'@miniature.mika', sub:'RARE DROP · 1 of 300 today', main:'🏠', orbits:['🔍','✨'], rare:true,
+   cap:'I built a working 1:87 scale kopitiam — the lights work, the fans spin, the uncle is 9mm tall. Six months of my life. Worth it.',
+   why:'Rare drop — shown to 300 people today. You’re one of them.', likes:8100},
+  {m:'laugh', ava:'🦆', u:'@pond.report', sub:'nature comedy', main:'🦆', orbits:['👑','🍞'],
+   cap:'Day 47 of narrating the park ducks like a nature documentary. Gerald has seized the fountain. The coup is complete.',
+   why:'You laughed at day 46 (we could tell)', likes:210300},
+  {m:'move', ava:'🥾', u:'@trail.tales', sub:'hiking · hidden spots', main:'⛰️', orbits:['🌄','🥾'],
+   cap:'A 40-minute hike, 20 minutes from the city, ends at THIS view. Full trail pin inside — go before it gets found.',
+   why:'Saturday is looking free on your calendar', likes:31600},
+  {m:'learn', ava:'💰', u:'@ringgit.rants', sub:'personal finance · no jargon', main:'🧾', orbits:['📉','☕'],
+   cap:'The “latte factor” is a myth — skipping coffee won’t make you rich. Here’s the one number that actually will.',
+   why:'You asked for more money explainers', likes:47500},
+  {m:'art', ava:'🎹', u:'@lo.fi.leila', sub:'musician · made today', main:'🎹', orbits:['🌧️','🎧'],
+   cap:'I sampled my grandma’s sewing machine into a beat. She says it’s “too boom boom”. She also asked for the file.',
+   why:'New from a creator you keep', likes:62300},
+  {m:'laugh', ava:'🤖', u:'@beep.boop.bo', sub:'sketches · 50s', main:'🤖', orbits:['🧻','❓'],
+   cap:'I trained my robot vacuum to guard the house. It has instead formed an alliance with the cat. I live in fear.',
+   why:'Closes your drop on a high — highest-rated comedy today', likes:156700},
+];
+
+// ---------------- state ----------------
+let deck = [], idx = 0, hearts = 0, kept = 0, startedAt = 0, ended = false;
+const $ = id => document.getElementById(id);
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toast._x); toast._x=setTimeout(()=>t.classList.remove('show'),1600); }
+function fmt(n){ return n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,'')+'k' : ''+n; }
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+// mood picker
+document.querySelectorAll('.mood').forEach(b=>b.addEventListener('click',()=>{
+  const on = document.querySelectorAll('.mood.on');
+  if(b.classList.contains('on') && on.length===1){ toast('Keep at least one mood 🙂'); return; }
+  b.classList.toggle('on');
+  updateMeta();
+}));
+function activeMoods(){ return [...document.querySelectorAll('.mood.on')].map(b=>b.dataset.m); }
+function buildDeck(){ const ms=activeMoods(); return POSTS.filter(p=>ms.includes(p.m)); }
+function updateMeta(){
+  const n = buildDeck().length;
+  $('metaCount').textContent = n+' moments';
+  $('metaTime').textContent = '~'+Math.max(1,Math.round(n*16/60))+' min';
+}
+
+// ---------------- feed ----------------
+function startDrop(){
+  deck = buildDeck(); idx = 0; hearts = 0; kept = 0; ended = false; startedAt = Date.now();
+  $('start').style.display = 'none';
+  $('feedwrap').classList.add('live');
+  renderFeed();
+}
+
+function renderFeed(){
+  $('segbar').innerHTML = deck.map((p,i)=>`<div class="seg ${p.rare?'rare':''}" data-s="${i}"><i></i></div>`).join('')
+    + '<div class="seg" data-s="end"><i></i></div>';
+  $('remain').textContent = deck.length+' to go';
+
+  $('feed').innerHTML = deck.map((p,i)=>{
+    const mm = MOOD_META[p.m];
+    return `
+    <section class="card ${mm.cls} ${p.rare?'rare':''}" data-i="${i}">
+      <div class="bgfx"></div><div class="noise"></div>
+      <div class="scene">
+        <span class="orbit" style="top:24%;left:18%">${p.orbits[0]}</span>
+        <span class="main">${p.main}</span>
+        <span class="orbit o2" style="top:60%;left:72%">${p.orbits[1]}</span>
+      </div>
+      <div class="shade"></div>
+      ${p.rare?'<div class="rareflag">⭐ RARE DROP · 1 OF 300 TODAY</div>':''}
+      <div class="content">
+        <div class="crearow">
+          <div class="ava">${p.ava}</div>
+          <div class="crea">${esc(p.u)}<span>${esc(p.sub)}</span></div>
+          <div class="mtag">${mm.tag}</div>
+        </div>
+        <div class="cap">${esc(p.cap)}</div>
+        <div class="why">🎯 ${esc(p.why)}</div>
+      </div>
+      <div class="rail">
+        <button class="act" data-heart onclick="heart(this,${i},event)"><span class="ico">🤍</span><span class="n">${fmt(p.likes)}</span></button>
+        <button class="act" data-keep onclick="keep(this)"><span class="ico">📥</span><span class="n">Keep</span></button>
+        <button class="act" onclick="send()"><span class="ico">✈️</span><span class="n">Send</span></button>
+      </div>
+    </section>`;
+  }).join('') + endCardHTML();
+
+  $('feed').scrollTop = 0;
+  watchProgress();
+  wireDoubleTap();
+}
+
+function endCardHTML(){
+  return `
+  <section class="card endcard" data-i="end">
+    <div class="endin">
+      <div class="endbadge">✅</div>
+      <div class="endh">That's your dose.</div>
+      <div class="endsub">Every card today earned its place.<br>Nothing else is waiting for you in here — and that's the point.</div>
+      <div class="stats">
+        <div class="stat"><b id="stCards">0</b><span>moments</span></div>
+        <div class="stat"><b id="stHearts">0</b><span>hearts given</span></div>
+        <div class="stat"><b id="stMin">0:00</b><span>time spent</span></div>
+      </div>
+      <div class="streakup">🔥 Streak → <b>13 days</b></div>
+      <div class="nextin">Next drop in <b id="cd">—</b></div>
+      <div class="endbtns">
+        <button class="ebtn hero" onclick="send()">✈️ Send today's rare drop to a friend</button>
+        <button class="ebtn" onclick="toast('Draft mode — coming soon 🎬')">🎬 Make something instead</button>
+        <button class="ebtn" onclick="resetDemo()">↺ Replay demo</button>
+      </div>
+      <button class="onemore" id="onemore" onclick="oneMore(this)">just one more?</button>
+    </div>
+  </section>`;
+}
+
+// progress + end detection
+let obs = null;
+function watchProgress(){
+  if(obs) obs.disconnect();
+  obs = new IntersectionObserver(es=>{
+    es.forEach(en=>{
+      if(!en.isIntersecting) return;
+      const s = en.target.dataset.i;
+      document.querySelectorAll('.seg').forEach(sg=>{
+        const v = sg.dataset.s;
+        sg.classList.toggle('done', v==='end' ? s==='end' : (s==='end' || Number(v)<=Number(s)));
+      });
+      if(s==='end'){ if(!ended){ ended=true; finishDrop(); } $('remain').textContent='done ✅'; return; }
+      idx = Number(s);
+      const left = deck.length-1-idx;
+      $('remain').textContent = left===0 ? 'last one!' : left+' to go';
+      if(idx===Math.floor(deck.length/2)) toast('halfway ☕ — nice pace');
+    });
+  }, {root:$('feed'), threshold:.6});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+function finishDrop(){
+  $('stCards').textContent = deck.length;
+  $('stHearts').textContent = hearts;
+  const s = Math.max(1, Math.round((Date.now()-startedAt)/1000));
+  $('stMin').textContent = Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  confetti();
+  tickCountdown();
+}
+
+function confetti(){
+  const host = document.querySelector('.phone');
+  const bits = ['🎉','✨','💊','🔥','💜','🧡'];
+  for(let i=0;i<26;i++){
+    const c = document.createElement('div');
+    c.className='confetti'; c.textContent=bits[i%bits.length];
+    c.style.left=(4+ (i*37)%92)+'%';
+    c.style.animationDuration=(2.2+ (i%5)*.45)+'s';
+    c.style.animationDelay=(i%7)*.12+'s';
+    host.appendChild(c); setTimeout(()=>c.remove(), 5200);
+  }
+}
+
+function tickCountdown(){
+  clearInterval(tickCountdown._t);
+  const upd = ()=>{
+    const now = new Date();
+    const next = new Date(now); next.setHours(24,0,0,0); // next drop at midnight
+    let d = Math.floor((next-now)/1000);
+    const h=Math.floor(d/3600), m=Math.floor(d%3600/60), sec=d%60;
+    const el=$('cd'); if(el) el.textContent = h+'h '+String(m).padStart(2,'0')+'m '+String(sec).padStart(2,'0')+'s';
+  };
+  upd(); tickCountdown._t = setInterval(upd, 1000);
+}
+
+// ---------------- actions ----------------
+function heart(btn, i, e){
+  const p = deck[i];
+  const on = btn.classList.toggle('hearted');
+  hearts += on?1:-1;
+  p.likes += on?1:-1;
+  btn.querySelector('.ico').textContent = on?'❤️':'🤍';
+  btn.querySelector('.n').textContent = fmt(p.likes);
+  if(on && e){
+    const card = btn.closest('.card');
+    burstAt(card, card.clientWidth*.5, card.clientHeight*.42, p.rare?'⭐':'❤️');
+  }
+}
+function keep(btn){
+  const on = btn.classList.toggle('kept');
+  kept += on?1:-1;
+  btn.querySelector('.ico').textContent = on?'📦':'📥';
+  btn.querySelector('.n').textContent = on?'Kept':'Keep';
+  if(on) toast('Kept — it’ll resurface when it’s useful, not 2am');
+}
+function send(){ toast('Sent ✈️ (mock)'); }
+function burstAt(card,x,y,ch){
+  const b=document.createElement('div'); b.className='burst'; b.textContent=ch||'❤️';
+  b.style.left=x+'px'; b.style.top=y+'px'; card.appendChild(b); setTimeout(()=>b.remove(),750);
+}
+function wireDoubleTap(){
+  document.querySelectorAll('.card:not(.endcard)').forEach(card=>{
+    let last=0;
+    card.addEventListener('click',e=>{
+      if(e.target.closest('.rail,button,a')) return;
+      const now=Date.now();
+      if(now-last<320){
+        const r=card.getBoundingClientRect();
+        burstAt(card, e.clientX-r.left, e.clientY-r.top, card.classList.contains('rare')?'⭐':'❤️');
+        const hb=card.querySelector('[data-heart]');
+        if(hb && !hb.classList.contains('hearted')) heart(hb, Number(card.dataset.i));
+        last=0;
+      } else last=now;
+    });
+  });
+}
+
+function oneMore(btn){
+  btn.classList.remove('no'); void btn.offsetWidth; btn.classList.add('no');
+  const lines=['tomorrow 🌅','that’s the whole point 🙂','go touch grass, legend 🌱','your streak thanks you 🔥'];
+  btn.textContent = lines[(oneMore._i=(oneMore._i||0)+1)%lines.length];
+}
+
+function resetDemo(){
+  ended=false;
+  $('feedwrap').classList.remove('live');
+  $('start').style.display='flex';
+  clearInterval(tickCountdown._t);
+}
+
+// keyboard nav
+document.addEventListener('keydown',e=>{
+  if(!$('feedwrap').classList.contains('live')) return;
+  const el=$('feed'), h=el.clientHeight;
+  if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); el.scrollBy({top:h,behavior:'smooth'}); }
+  if(e.key==='ArrowUp'){ e.preventDefault(); el.scrollBy({top:-h,behavior:'smooth'}); }
+});
+
+updateMeta();
+</script>
+</body>
+</html>
